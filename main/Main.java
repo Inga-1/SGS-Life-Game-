@@ -9,6 +9,5 @@ public class Main {
         game.startGame();
         game.gameThread.sleep(5000);
         game.gameThread.interrupt();
-        //idk how to stop it
     }
 }

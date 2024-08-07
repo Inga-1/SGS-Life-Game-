@@ -14,7 +14,7 @@ public class Game implements Runnable{
         this.cult=null;
         actives.add(leader);
 
-        for(int i=1;i<size+1;i++){
+        for(int i=1;i<size;i++){
             Player p=new Player(i,size,size);
             actives.add(p);
         }
@@ -39,6 +39,8 @@ public class Game implements Runnable{
                 System.out.println("It's still going...");
                 for(Player p:actives){
                     update(p);
+                    System.out.println("updated");
+                    Thread.sleep(500);
                 }
                 // Making thread sleep for 0.5 seconds
                 Thread.sleep(500);
@@ -58,7 +60,7 @@ public class Game implements Runnable{
         //checks all messages and gives appropriate response
         //remember to delete messages after reading them
         Profile profile=p.getProfile();
-        for(int i=1;i<=profile.len;){
+        for(int i=1;i<profile.len;i++){
             //i is position of sender in board(index of profile)
         }
     }
