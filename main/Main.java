@@ -7,7 +7,7 @@ public class Main {
         Board b=p.getBoard();*/
         Game game= new Game(10);
         game.startGame();
-        game.gameThread.sleep(5000);
+        game.gameThread.sleep(10000);
         game.gameThread.interrupt();
     }
 }

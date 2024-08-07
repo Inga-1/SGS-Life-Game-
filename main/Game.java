@@ -43,7 +43,6 @@ public class Game implements Runnable{
                     Thread.sleep(500);
                 }
                 // Making thread sleep for 0.5 seconds
-                Thread.sleep(500);
             }
         }
         // Catch block to handle exception
