@@ -1,26 +1,29 @@
 package main;
 
+import java.util.Arrays;
+
 public class Profile {
-    private int[] profile;
+    private Messages[] profile;
     protected int len;
     public Profile(int p){
         this.len=p;
-        profile=new int[p];
+        profile=new Messages[p];
+        Arrays.fill(profile,Messages.NONE);
     }
     public String toString(){
         String s=new String();
         s+="[";
-        for(int i:profile){s+=Integer.toString(i);}
+        for(Messages i:profile){s+=i.toString();}
         s+="]";
         return s;
     }
-    public int getProfileElement(int i){
+    public Messages getProfileElement(int i){
         return profile[i];
     }
-    public void setProfileElement(int i,int e){
+    public void setProfileElement(int i,Messages e){
         profile[i]=e;
     }
-    public int[] getProfile(){
+    public Messages[] getProfile(){
         return profile;
     }
     }

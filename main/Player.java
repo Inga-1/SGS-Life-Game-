@@ -19,7 +19,7 @@ public class Player{
         String bs=board.toString();
         String ps=profile.toString();
         Tuple<String,String> test=new Tuple<>(bs,ps);
-        String s="name: "+this.id+"\nboard: "+bs+"\nprofile: "+ps+"\nconfiguration: "+test.toString();
+        String s="id: "+this.id+"\nboard: "+bs+"\nprofile: "+ps+"\nconfiguration: "+test.toString();
         return s;
     }
     public Board getBoard(){

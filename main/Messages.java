@@ -1,6 +1,7 @@
 package main;
 
 public enum Messages {
+    NONE(0),
     MEET(1), //become acquaintances
     RECRUITED(2), //become part of cult
     FRIEND(3), //become friends
@@ -12,4 +13,5 @@ public enum Messages {
     private int message;
     Messages(int m){this.message=m;}
     public int toInt(){return message;}
+    public String toString(){return ""+message+"";}
 }

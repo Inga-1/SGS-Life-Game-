@@ -62,32 +62,32 @@ public class Game implements Runnable{
         for(int i=1;i<profile.len;i++){
             //i is position of sender in board(index of profile)
             int senderPosition=i;
-            int el=profile.getProfileElement(i);
+            Messages el=profile.getProfileElement(i);
             switch (el){
-                case 1:
+                case MEET:
                     //when meeting we add the player to our board (in acquaintances interval) and us in the player's board
                     //if full notify
                     break;
-                case 2:
+                case RECRUITED:
                     //when recruited we add ourselves to the cult
                     break;
-                case 3:
+                case FRIEND:
                     //when befriending we add the player to our board (in friends interval)and us in the player's board
                     //if full notify and reject --> negative consequence
                     break;
-                case 4:
+                case LOVER:
                     //when becoming lovers we add the player to our board (in lover place)and us in the player's board
                     //if full notify and reject --> negative consequence
                     break;
-                case 5:
+                case CHILD:
                     //when making children, check sigma function first (max number of children possible)
                     //if parents in cult, the kids will be members too
                     //add children to players board (in children interval) and parents in children board (in parents interval)
                     break;
-                case 6:
+                case ARGUE:
                     //idk yet
                     break;
-                case 7:
+                case KILLED:
                     //if killed get removed from actives
                     break;
             }
