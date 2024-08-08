@@ -35,7 +35,7 @@ public class Game implements Runnable{
     @Override
     public void run() {
         try {
-            while(gameThread!=null) {
+            while(gameThread!=null){
                 System.out.println("It's still going...");
                 for(Player p:actives){
                     update(p);
