@@ -9,7 +9,7 @@ public class Game implements Runnable{
         this.maxsize=size;
 
         actives= new ArrayList<Player>();
-        Leader leader=new Leader(1,size,size);
+        Leader leader=new Leader(0,size,size);
         this.cultLeader=leader;
         this.cult=null;
         actives.add(leader);
@@ -61,6 +61,39 @@ public class Game implements Runnable{
         Profile profile=p.getProfile();
         for(int i=1;i<profile.len;i++){
             //i is position of sender in board(index of profile)
+            int senderPosition=i;
+            int el=profile.getProfileElement(i);
+            switch (el){
+                case 1:
+                    //when meeting we add the player to our board (in acquaintances interval) and us in the player's board
+                    //if full notify
+                    break;
+                case 2:
+                    //when recruited we add ourselves to the cult
+                    break;
+                case 3:
+                    //when befriending we add the player to our board (in friends interval)and us in the player's board
+                    //if full notify and reject --> negative consequence
+                    break;
+                case 4:
+                    //when becoming lovers we add the player to our board (in lover place)and us in the player's board
+                    //if full notify and reject --> negative consequence
+                    break;
+                case 5:
+                    //when making children, check sigma function first (max number of children possible)
+                    //if parents in cult, the kids will be members too
+                    //add children to players board (in children interval) and parents in children board (in parents interval)
+                    break;
+                case 6:
+                    //idk yet
+                    break;
+                case 7:
+                    //if killed get removed from actives
+                    break;
+            }
         }
+    }
+    public String seeActives(){
+        return actives.toString();
     }
 }
