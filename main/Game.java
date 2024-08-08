@@ -90,6 +90,9 @@ public class Game implements Runnable{
                 case KILLED:
                     //if killed get removed from actives
                     break;
+                default:
+                    //random action, according to relationship to random player
+                    break;
             }
         }
     }
