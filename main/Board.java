@@ -3,8 +3,10 @@ package main;
 import java.util.Arrays;
 public class Board{
     private Tuple[] board;
+    protected int len;
     public Board(int id, int b){
         board=new Tuple[b];
+        this.len=b;
         Arrays.fill(board, new Tuple(null,null));
         board[0]=new Tuple<>(id,1);
     }

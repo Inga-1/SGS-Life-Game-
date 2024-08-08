@@ -4,6 +4,7 @@ import main.Board;
 
 public class Player{
     protected int id;
+    protected boolean cultMember;
     protected Board board;
     protected Profile profile;
     protected Tuple<Board, Profile> config;
@@ -11,6 +12,7 @@ public class Player{
     public Player(int id, int b,int p){
         this.id=id;
         status=1;
+        cultMember=false;
         board=new Board(id,b);
         profile=new Profile(p);
         config=new Tuple<>(board,profile);
