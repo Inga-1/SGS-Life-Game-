@@ -4,18 +4,19 @@ public class Game implements Runnable{
     private ArrayList<Player> actives;
     private int maxsize; //from input
     private Leader cultLeader;
-    private Cult cult;
+    protected Cult cult;
     public Game(int size){ //make it get from input
         this.maxsize=size;
 
         actives= new ArrayList<Player>();
-        Leader leader=new Leader(0,size,size);
+        this.cult=new Cult();
+        Leader leader=new Leader(0,size,this.cult);
+        this.cult.setLeader(leader);
         this.cultLeader=leader;
-        this.cult=null;
         actives.add(leader);
 
         for(int i=1;i<size;i++){
-            Player p=new Player(i,size,size);
+            Player p=new Player(i,size,this.cult);
             actives.add(p);
         }
         //array of all players

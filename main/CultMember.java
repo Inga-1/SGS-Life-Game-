@@ -5,8 +5,8 @@ abstract class CultMember extends Player{
         LEADER,SHAMAN,PRIEST,NONE
     }
     private Role role;
-    public CultMember(int id,int b,int p){
-        super(id,b,p);
+    public CultMember(int id,int size,Cult cult){
+        super(id,size,cult);
         this.role=Role.NONE;
     }
     public void pray(){
