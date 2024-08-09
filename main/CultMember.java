@@ -10,7 +10,7 @@ abstract class CultMember extends Player{
         this.role=Role.NONE;
     }
     public void pray(){
-        //changes stats
+        //changes faith stats
     }
     public void changeRole(Role r){
         role=r;
