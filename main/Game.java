@@ -98,7 +98,9 @@ public class Game implements Runnable{
                     }
                     break;
                 case FAILEDKILL:
-
+                    if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
+                        p.kill(sender);
+                    }
                     break;
                 case FAILEDESCAPE:
                     if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
@@ -124,8 +126,5 @@ public class Game implements Runnable{
         }
         actives.remove(victim.id);
         System.out.println(victim.id+" has been killed by "+killer.id);
-    }
-    public void kill(Player victim){
-        
     }
 }

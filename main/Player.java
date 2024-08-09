@@ -51,6 +51,9 @@ public class Player{
         //add Exception (try/catch)
     }
 
+    public void kill(Player victim){
+
+    }
 }
 
 /*QUESTIONS:
