@@ -1,9 +1,9 @@
 package main;
 
 public class SimpleMember extends CultMember{
-    private final Role role;
+    //concrete implementation of CultMember
     public SimpleMember(int id,int size,Cult cult){
         super(id,size,cult);
-        role=Role.NONE;
     }
+    //add makeShaman and makePriest on the model of makeMember
 }

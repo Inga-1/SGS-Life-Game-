@@ -2,19 +2,19 @@ package main;
 
 import java.util.Arrays;
 public class Board{
-    private Tuple[] board;
+    protected Tuple<Integer,Integer>[] board;
     protected int len;
     public Board(int id, int b){
         board=new Tuple[b];
         this.len=b;
         Arrays.fill(board, new Tuple(null,null));
-        board[0]=new Tuple<>(id,1);
+        board[0]=new Tuple<Integer,Integer>(id,1);
     }
     //public main.Tuple get
     public String toString(){
         String s=new String();
         s+="[";
-        for(Tuple<Board, Profile> i:board){
+        for(Tuple<Integer, Integer> i:board){
             if(i==null){
                 s+="( , )";
             }else{s+=i.toString();}
@@ -22,7 +22,7 @@ public class Board{
         s+="]";
         return s;
     }
-    public Tuple<Board, Profile> getBoardElement(int i){
+    public Tuple<Integer, Integer> getBoardElement(int i){
         return board[i];
     }
     public void setBoardElement(int i, Tuple t){

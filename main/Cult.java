@@ -19,7 +19,7 @@ public class Cult {
     }
     public void addMember(Player p){
         p.isMember=true;
-        CultMember c=p.makeCultMember();
+        CultMember c=p.makeMember();
         cult.add(c);
     }
 }

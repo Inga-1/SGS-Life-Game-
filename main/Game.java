@@ -60,10 +60,13 @@ public class Game implements Runnable{
         //checks all messages and gives appropriate response
         //remember to delete messages after reading them
         Profile profile=p.getProfile();
+        Board board=p.getBoard();
         for(int i=1;i<profile.len;i++){
             //i is position of sender in board(index of profile)
             int senderPosition=i;
             Messages el=profile.getProfileElement(i);
+            int idsender=board.getBoardElement(i).getFirst();
+            Player sender= actives.get(idsender);
             switch (el){
                 case MEET:
                     //when meeting we add the player to our board (in acquaintances interval) and us in the player's board
@@ -85,19 +88,44 @@ public class Game implements Runnable{
                     //if parents in cult, the kids will be members too
                     //add children to players board (in children interval) and parents in children board (in parents interval)
                     break;
-                case ARGUE:
-                    //idk yet
-                    break;
                 case KILLED:
-                    //if killed get removed from actives
+                    killed(sender,p);
+                    break;
+                case ARGUE:
+                    //if someone argues with leader they get kicked out
+                    if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
+                        this.cultLeader.kickOut(sender.cultMember);
+                    }
+                    break;
+                case FAILEDKILL:
+
+                    break;
+                case FAILEDESCAPE:
+                    if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
+                        sender.cultMember.hardWork();
+                    }
                     break;
                 default:
                     //random action, according to relationship to random player
+                    //make it have a probability to happen otherwise we have too many interactions going on
+                    //if the player is a cult member, they could also just pray
                     break;
             }
         }
     }
     public String seeActives(){
         return actives.toString();
+    }
+    public void killed(Player killer,Player victim){
+        victim.status=0;//not active anymore
+        if(victim.isMember){
+            int i=victim.getCultIndex();
+            this.cult.cult.remove(i);
+        }
+        actives.remove(victim.id);
+        System.out.println(victim.id+" has been killed by "+killer.id);
+    }
+    public void kill(Player victim){
+        
     }
 }

@@ -17,8 +17,8 @@ public class Main {
         Leader l2=(Leader)l;*/
 
         //STILL TO ADD:
-        //array of stats
-        //indices for diff acquaintances
+        //array of stats(or can just be constants)
+        //indices for diff acquaintances(put it in board)
         //methods for actions
         //death by age (add age stat)-->payoff in profile
     }

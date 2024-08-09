@@ -39,7 +39,12 @@ public class Player{
         return this.cult.cult.get(i);
         //add Exception (try/catch)
     }
-    public SimpleMember makeCultMember(){
+    public int getCultIndex(){
+        int i = this.cult.cult.indexOf(this.cultMember);
+        return i;
+        //add Exception (try/catch)
+    }
+    public SimpleMember makeMember(){
         SimpleMember c = new SimpleMember(this.id,board.len,this.cult);
         this.cultMember=c;
         return (SimpleMember) this.cultMember;
