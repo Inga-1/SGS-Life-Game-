@@ -5,10 +5,7 @@ public class Main {
         /*Player p=new Player('a',10,10);
         System.out.println(p.toString());
         Board b=p.getBoard();*/
-        Game game= new Game(10);
-        Player p=new Player(36,10,game.cult);
-        game.cult.addMember(p);
-        System.out.println(p.getCultMember());
+        //Game game= new Game(10);
         //System.out.println(game.seeActives());
         /*game.startGame();
         game.gameThread.sleep(5000);
