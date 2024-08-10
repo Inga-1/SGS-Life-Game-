@@ -1,5 +1,6 @@
 package main;
 import java.util.ArrayList;
+import java.util.Random
 public class Game implements Runnable{
     private ArrayList<Player> actives;
     private int maxsize; //from input
@@ -69,17 +70,23 @@ public class Game implements Runnable{
             Player sender= actives.get(idsender);
             switch (el){
                 case MEET:
+                    
                     //when meeting we add the player to our board (in acquaintances interval) and us in the player's board
                     //if full notify
                     break;
                 case RECRUITED:
+                    if( p.isMember == true){
+                    }
+                    else{addMember(p)}
                     //when recruited we add ourselves to the cult
                     break;
                 case FRIEND:
+                    
                     //when befriending we add the player to our board (in friends interval)and us in the player's board
                     //if full notify and reject --> negative consequence
                     break;
                 case LOVER:
+                    
                     //when becoming lovers we add the player to our board (in lover place)and us in the player's board
                     //if full notify and reject --> negative consequence
                     break;
@@ -108,6 +115,13 @@ public class Game implements Runnable{
                     }
                     break;
                 default:
+                    if (p.isMember == true){
+                        p.pray();}
+                    else{
+                       int Random_message = rand.nextInt(10);
+                       //int Random_player_from_board = rand.nextInt(length of aquqitance board);
+                       //sending random message to random member on players board
+                    }
                     //random action, according to relationship to random player
                     //make it have a probability to happen otherwise we have too many interactions going on
                     //if the player is a cult member, they could also just pray
