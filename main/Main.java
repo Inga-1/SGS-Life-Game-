@@ -4,12 +4,13 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
+        //--------------------- FOR SIZE -------------------------------------------------------------------------------------------------------------------------------------
         Scanner myObj = new Scanner(System.in);
         int sizeNum;
         Size size;
 
         // Enter username and press Enter
-        System.out.println("Enter size");
+        System.out.println("Choose a size - Type 1 for SMALL, 2 for MEDIUM or 3 for LARGE:");
         sizeNum = Integer.parseInt(myObj.nextLine());
         switch (sizeNum){
             case 1:
@@ -25,7 +26,9 @@ public class Main {
                 throw new IllegalStateException("Unexpected value: " + sizeNum);
         }
 
-        System.out.println("Size is: "+size.name);
+        System.out.println("Chosen size: "+size.name);
+        //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
         /*Player p=new Player('a',10,10);
         System.out.println(p.toString());
