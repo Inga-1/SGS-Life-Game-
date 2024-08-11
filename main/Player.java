@@ -45,7 +45,7 @@ public class Player{
         //add Exception (try/catch)
     }
     public SimpleMember makeMember(){
-        SimpleMember c = new SimpleMember(this.id,board.len,this.cult);
+        SimpleMember c = new SimpleMember(this.id,board.size,this.cult);
         this.cultMember=c;
         return (SimpleMember) this.cultMember;
         //add Exception (try/catch)

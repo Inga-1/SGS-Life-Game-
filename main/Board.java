@@ -4,7 +4,7 @@ import java.util.Arrays;
 public class Board{
     protected Tuple<Integer,Integer>[] board;
     protected int len;
-    private Size size;
+    Size size;
     public Board(int id, Size s){
         int b=s.maxSize;
         board=new Tuple[b];

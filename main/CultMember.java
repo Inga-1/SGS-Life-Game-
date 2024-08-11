@@ -5,7 +5,7 @@ public abstract class CultMember extends Player{
         LEADER,SHAMAN,PRIEST,NONE
     }
     protected Role role;
-    public CultMember(int id,int size,Cult cult){
+    public CultMember(int id,Size size,Cult cult){
         super(id,size,cult);
         this.role=Role.NONE;
     }

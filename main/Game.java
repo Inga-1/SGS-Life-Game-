@@ -16,7 +16,7 @@ public class Game implements Runnable{
 
         actives= new ArrayList<Player>();
         this.cult=new Cult();
-        Leader leader=new Leader(0,size.maxSize,this.cult);
+        Leader leader=new Leader(0,size,this.cult);
         this.cult.setLeader(leader);
         this.cultLeader=leader;
         actives.add(leader);

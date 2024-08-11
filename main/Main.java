@@ -1,7 +1,32 @@
 package main;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
+
+        Scanner myObj = new Scanner(System.in);
+        int sizeNum;
+        Size size;
+
+        // Enter username and press Enter
+        System.out.println("Enter size");
+        sizeNum = Integer.parseInt(myObj.nextLine());
+        switch (sizeNum){
+            case 1:
+                size=Size.SMALL;
+                break;
+            case 2:
+                size=Size.MEDIUM;
+                break;
+            case 3:
+                size=Size.LARGE;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + sizeNum);
+        }
+
+        System.out.println("Size is: "+size.name);
+
         /*Player p=new Player('a',10,10);
         System.out.println(p.toString());
         Board b=p.getBoard();*/

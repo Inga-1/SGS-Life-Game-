@@ -2,7 +2,7 @@ package main;
 
 public class Leader extends CultMember{
 
-    public Leader(int id, int size, Cult cult) {
+    public Leader(int id, Size size, Cult cult) {
         super(id, size,cult);
         this.role=Role.LEADER;
     }

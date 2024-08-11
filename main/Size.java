@@ -1,17 +1,20 @@
 package main;
 
 public enum Size {
-    SMALL(25,10),
-    MEDIUM(50,25),
-    LARGE(100,40);
+    SMALL(25,10, "small"),
+    MEDIUM(50,25, "medium"),
+    LARGE(100,40, "large");
 
     int actives;
     int possibleChildren;
     int maxSize;
-    Size(int actives, int children){
+    String name;
+
+    Size(int actives, int children, String name){
         this.actives=actives;
         this.possibleChildren=children;
         this.maxSize=actives+children;
+        this.name=name;
     }
 
     //children
@@ -19,13 +22,12 @@ public enum Size {
         switch (this){
             case SMALL:
                 return 5;
-                break;
             case MEDIUM:
                 return 7;
-                break;
             case LARGE:
                 return 14;
-                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + this);
         }
     }
 
@@ -62,13 +64,12 @@ public enum Size {
         switch (this){
             case SMALL:
                 return 6;
-            break;
             case MEDIUM:
                 return 18;
-            break;
             case LARGE:
                 return 36;
-            break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + this);
         }
     }
 
@@ -84,13 +85,12 @@ public enum Size {
         switch (this){
             case SMALL:
                 return 10;
-            break;
             case MEDIUM:
                 return 24;
-            break;
             case LARGE:
                 return 47;
-            break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + this);
         }
     }
 
@@ -106,13 +106,12 @@ public enum Size {
         switch (this){
             case SMALL:
                 return 5;
-            break;
             case MEDIUM:
                 return 15;
-            break;
             case LARGE:
                 return 25;
-            break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + this);
         }
     }
 
