@@ -11,7 +11,7 @@ public class Player{
     protected Profile profile;
     protected Tuple<Board, Profile> config;
     protected int status; //0 dead, 1 alive
-    public Player(int id, int size, Cult cult){
+    public Player(int id, Size size, Cult cult){
         this.id=id;
         this.cult=cult;
         status=1;

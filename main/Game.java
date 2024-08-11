@@ -3,19 +3,25 @@ import java.util.ArrayList;
 public class Game implements Runnable{
     private ArrayList<Player> actives;
     private int maxsize; //from input
+    private Size size;
+    private int activesSize;
+    private int possibleChildren;
     private Leader cultLeader;
     protected Cult cult;
-    public Game(int size){ //make it get from input
-        this.maxsize=size;
+    public Game(Size size){ //make it get from input
+        this.size=size;
+        this.maxsize=size.maxSize;
+        this.activesSize=size.actives;
+        this.possibleChildren=size.possibleChildren;
 
         actives= new ArrayList<Player>();
         this.cult=new Cult();
-        Leader leader=new Leader(0,size,this.cult);
+        Leader leader=new Leader(0,size.maxSize,this.cult);
         this.cult.setLeader(leader);
         this.cultLeader=leader;
         actives.add(leader);
 
-        for(int i=1;i<size;i++){
+        for(int i=1;i<size.actives;i++){
             Player p=new Player(i,size,this.cult);
             actives.add(p);
         }
