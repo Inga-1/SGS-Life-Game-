@@ -2,7 +2,7 @@ package main;
 
 import main.Board;
 
-public class Player{
+public class Player extends Game{
     protected int ChildrenCounter;
     protected int id;
     protected boolean isMember;
@@ -49,8 +49,8 @@ public class Player{
     }
     public MakeChildren(Player player1, PLayer player2){
         //if(ChildrenCounter <  // size of how many children player can have){
-           //if(Plces in universe is enough){
-        // if(Player1 isMember == true || Player2 isMember == true){
+           //if(size - actives > 0){
+           // if(Player1 isMember == true || Player2 isMember == true){
           //Player Id/ child = new Player(all of the stuff==> in the cult)
         //}
         //else{Player id/child = new Player(all of the stuff==> not in the cult==> ig default)}
