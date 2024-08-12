@@ -3,6 +3,7 @@ package main;
 import main.Board;
 
 public class Player extends Game{
+    protected int FriendsCounter;
     protected int ChildrenCounter;
     protected int id;
     protected boolean isMember;
@@ -13,8 +14,10 @@ public class Player extends Game{
     protected Tuple<Board, Profile> config;
     protected int status; //0 dead, 1 alive
     public Player(int id, int size, Cult cult){
-        this.ChildrenCounter = Children_counter;
-        Children_counter = 0;
+        this.ChildrenCounter = ChildrenCounter;
+        ChildrenCounter = 0;
+        this.FriendsCounter = FriendsCounter;
+        FriendsCounter = 0;
         this.id=id;
         this.cult=cult;
         status=1;
@@ -50,6 +53,7 @@ public class Player extends Game{
     public MakeChildren(Player player1, PLayer player2){
         //if(ChildrenCounter <  // size of how many children player can have){
            //if(size - actives > 0){
+           // ChildrenCounter ++;
            // //Player Id/ child = new Player(all of the stuff)
            //actives.add(id/child)
           // player1.SetBoardElement(ChildrenCounter + beggining index of children depending on size of the world, child tuple)
