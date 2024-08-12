@@ -3,6 +3,7 @@ package main;
 import main.Board;
 
 public class Player extends Game{
+    protected int MeetsCounter;
     protected int FriendsCounter;
     protected int ChildrenCounter;
     protected int id;
@@ -18,6 +19,8 @@ public class Player extends Game{
         ChildrenCounter = 0;
         this.FriendsCounter = FriendsCounter;
         FriendsCounter = 0;
+        this.MeetsCounter = MeetsCounter;
+        MeetsCounter = 0;
         this.id=id;
         this.cult=cult;
         status=1;
