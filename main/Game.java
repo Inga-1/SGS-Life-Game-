@@ -16,13 +16,13 @@ public class Game implements Runnable{
 
         actives= new ArrayList<Player>();
         this.cult=new Cult();
-        Leader leader=new Leader(0,size,this.cult);
+        Leader leader=new Leader(0,size,this);
         this.cult.setLeader(leader);
         this.cultLeader=leader;
         actives.add(leader);
 
         for(int i=1;i<size.actives;i++){
-            Player p=new Player(i,size,this.cult);
+            Player p=new Player(i,size,this);
             actives.add(p);
         }
         //array of all players

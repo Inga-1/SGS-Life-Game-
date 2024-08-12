@@ -7,14 +7,17 @@ public class Player{
     protected boolean isMember;
     protected CultMember cultMember;
     protected Cult cult;
+    protected Game game;
+    protected Stats stats;
     protected Board board;
     protected Profile profile;
     protected Tuple<Board, Profile> config;
     protected int status; //0 dead, 1 alive
-    public Player(int id, Size size, Cult cult){
+    public Player(int id, Size size, Game game){
         this.id=id;
-        this.cult=cult;
+        this.game=game;
         status=1;
+        stats.randomizeStats();
         isMember=false;
         this.cultMember=null;
         board=new Board(id,size);
@@ -45,14 +48,14 @@ public class Player{
         //add Exception (try/catch)
     }
     public SimpleMember makeMember(){
-        SimpleMember c = new SimpleMember(this.id,board.size,this.cult);
+        SimpleMember c = new SimpleMember(this.id,board.size,this.game);
         this.cultMember=c;
         return (SimpleMember) this.cultMember;
         //add Exception (try/catch)
     }
 
     public void kill(Player victim){
-
+        //to implement
     }
 }
 

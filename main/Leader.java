@@ -2,8 +2,8 @@ package main;
 
 public class Leader extends CultMember{
 
-    public Leader(int id, Size size, Cult cult) {
-        super(id, size,cult);
+    public Leader(int id, Size size, Game game) {
+        super(id, size,game);
         this.role=Role.LEADER;
     }
     //diff stats compared to others

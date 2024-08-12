@@ -5,12 +5,15 @@ public abstract class CultMember extends Player{
         LEADER,SHAMAN,PRIEST,NONE
     }
     protected Role role;
-    public CultMember(int id,Size size,Cult cult){
-        super(id,size,cult);
+    public CultMember(int id,Size size,Game game){
+        super(id,size,game);
         this.role=Role.NONE;
     }
     public void pray(){
         //changes faith stats
+    }
+    public void question(){
+        //lowers faith
     }
     public void hardWork(){
         //lowers health and happiness
