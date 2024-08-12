@@ -51,10 +51,10 @@ public class Player{
         //if(ChildrenCounter < 5 // size of how many children player can have){
            //if(Plces in universe is enough){
         // if(Player1 isMember == true || Player2 isMember == true)
-          //Player(id, size , cult){
+          //Player Id/ child = new Player(all of the stuff==> in the cult){
         //isMember = true
         //}
-        //else{Player(id, size, cult){ isMember = false}}
+        //else{Player id/child = new Player(all of the stuff==> not in the cult==> ig default)}
     //}
            //}
     }
