@@ -48,17 +48,6 @@ public enum Size {
         return x;
     }
 
-    //siblings
-    public int getAmountSiblings(){
-        return getAmountChildren()-1;
-    }
-    public int BeginningSiblingsInterval(){
-        return getParentTwoIndex()+1;
-    }
-    public int EndSiblingsInterval(){
-        return getParentTwoIndex()+getAmountSiblings();
-    }
-
     //friends
     public int getAmountFriends(){
         switch (this){
@@ -74,10 +63,10 @@ public enum Size {
     }
 
     public int BeginningFriendsInterval(){
-        return EndSiblingsInterval()+1;
+        return getParentTwoIndex()+1;
     }
     public int EndFriendsInterval(){
-        return EndSiblingsInterval()+getAmountFriends();
+        return getParentTwoIndex()+getAmountFriends();
     }
 
     //acquaintances
