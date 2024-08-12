@@ -86,7 +86,7 @@ public class Game implements Runnable{
                     //else{// maybe some loss of charisma for sender???}
                     break;
                 case CHILD:
-            
+                    p.MakeChildren(Player p, Player sender)
                     // if(there are places in the world && children array of p is not full && children array of sender not full){
                     // WE NEED TO MAKE CHILDREN SOMEHOW == WOULD DO THAT IN PLAYER CLASS EXTEND IT AND CALL IT FROM SUPER.METHODTOMAKECHILDREN
                     //{
