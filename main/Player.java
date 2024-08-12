@@ -3,6 +3,7 @@ package main;
 import main.Board;
 
 public class Player{
+    protected int ChildrenCounter;
     protected int id;
     protected boolean isMember;
     protected CultMember cultMember;
@@ -12,6 +13,8 @@ public class Player{
     protected Tuple<Board, Profile> config;
     protected int status; //0 dead, 1 alive
     public Player(int id, int size, Cult cult){
+        this.ChildrenCounter = Children_counter;
+        Children_counter = 0;
         this.id=id;
         this.cult=cult;
         status=1;
@@ -43,6 +46,17 @@ public class Player{
         int i = this.cult.cult.indexOf(this.cultMember);
         return i;
         //add Exception (try/catch)
+    }
+    public MakeChildren(Player player1, PLayer player2){
+        //if(ChildrenCounter < 5 // size of how many children player can have){
+           //if(Plces in universe is enough){
+        // if(Player1 isMember == true || Player2 isMember == true)
+          //Player(id, size , cult){
+        //isMember = true
+        //}
+        //else{Player(id, size, cult){ isMember = false}}
+    //}
+           //}
     }
     public SimpleMember makeMember(){
         SimpleMember c = new SimpleMember(this.id,board.len,this.cult);
