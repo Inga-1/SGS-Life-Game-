@@ -50,10 +50,13 @@ public class Player extends Game{
     public MakeChildren(Player player1, PLayer player2){
         //if(ChildrenCounter <  // size of how many children player can have){
            //if(size - actives > 0){
-           // if(Player1 isMember == true || Player2 isMember == true){
-          //Player Id/ child = new Player(all of the stuff==> in the cult)
-        //}
-        //else{Player id/child = new Player(all of the stuff==> not in the cult==> ig default)}
+           // //Player Id/ child = new Player(all of the stuff)
+           //actives.add(id/child)
+          // player1.SetBoard(ChildrenCounter + beggining index of children depending on size of the world) with child
+        // player2.SetBoard(ChildrenCounter + beggining index of children depending on size of the world) with child
+        // id/child.SetBoard(place set by size of the world) with player1
+        // id/child.SetBoard(place set by the world +1 ) with player2
+           // W SRODKU  if(Player1 isMember == true || Player2 isMember == true){ SETNAC MU ZE JEST W CULT
     //}
            //}
     }
