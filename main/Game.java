@@ -70,30 +70,28 @@ public class Game implements Runnable{
             Player sender= actives.get(idsender);
             switch (el){
                 case MEET:
-                    
-                    //when meeting we add the player to our board (in acquaintances interval) and us in the player's board
-                    //if full notify
+                    //Puting newly met person in array of aquaintances w przedziale set by size of the world
+                    // if sender not in array of aquaintances : SetBoardElement(pre-last place){this met person}
                     break;
                 case RECRUITED:
                     if( p.isMember == true){
                     }
                     else{addMember(p)}
-                    //when recruited we add ourselves to the cult
                     break;
                 case FRIEND:
-                    
-                    //when befriending we add the player to our board (in friends interval)and us in the player's board
-                    //if full notify and reject --> negative consequence
+                    //if (sender not in space in array for friends){check for null place in friends sector in array==> while loop==> when we find it setBoard to this friend
                     break;
                 case LOVER:
-                    
-                    //when becoming lovers we add the player to our board (in lover place)and us in the player's board
-                    //if full notify and reject --> negative consequence
+                    //if(3rd place of the array not taken){ SetBoard(2=index) to be his lover}
+                    //else{// maybe some loss of charisma for sender???}
                     break;
                 case CHILD:
-                    //when making children, check sigma function first (max number of children possible)
-                    //if parents in cult, the kids will be members too
-                    //add children to players board (in children interval) and parents in children board (in parents interval)
+            
+                    // if(there are places in the world && children array of p is not full && children array of sender not full){
+                    // WE NEED TO MAKE CHILDREN SOMEHOW == WOULD DO THAT IN PLAYER CLASS EXTEND IT AND CALL IT FROM SUPER.METHODTOMAKECHILDREN
+                    //{
+                    
+                    
                     break;
                 case KILLED:
                     killed(sender,p);
@@ -118,7 +116,8 @@ public class Game implements Runnable{
                     if (p.isMember == true){
                         p.pray();}
                     else{
-                       int Random_message = rand.nextInt(10);
+                        //ZOSTAWIC DO OGARNIECIA RAZEM
+                       //int Random_message = rand.nextInt(10);
                        //int Random_player_from_board = rand.nextInt(length of aquqitance board);
                        //sending random message to random member on players board
                     }
