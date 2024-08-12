@@ -70,6 +70,11 @@ public class Game implements Runnable{
             Player sender= actives.get(idsender);
             switch (el){
                 case MEET:
+                    if(sender // not in board==> SHOULD I CHECK SENDER TUPLE???){
+                        p.SetBoardElement(size-1, sender);
+                       //gaining on stats
+                    }
+                    else{//losing on stats}
                     //Puting newly met person in array of aquaintances w przedziale set by size of the world
                     // if sender not in array of aquaintances : SetBoardElement(pre-last place){this met person}
                     break;
@@ -79,9 +84,18 @@ public class Game implements Runnable{
                     else{addMember(p)}
                     break;
                 case FRIEND:
+                    if(sender // not in boards space for friends based on size==> SHOULD I CHECK SENDER TUPLE???){
+                        //p.SetBoardElement(index of friends based on size + p.FriendsCounter , sender);
+                       //gaining on stats
+                    }
+                    else{//losing on stats}
                     //if (sender not in space in array for friends){check for null place in friends sector in array==> while loop==> when we find it setBoard to this friend
                     break;
                 case LOVER:
+                    if(p.board[2] == null){
+                        p.SetBoardElement(2, sendertuple?)
+                    }
+                        else{//losing on stats}
                     //if(3rd place of the array not taken){ SetBoard(2=index) to be his lover}
                     //else{// maybe some loss of charisma for sender???}
                     break;
@@ -90,8 +104,6 @@ public class Game implements Runnable{
                     // if(there are places in the world && children array of p is not full && children array of sender not full){
                     // WE NEED TO MAKE CHILDREN SOMEHOW == WOULD DO THAT IN PLAYER CLASS EXTEND IT AND CALL IT FROM SUPER.METHODTOMAKECHILDREN
                     //{
-                    
-                    
                     break;
                 case KILLED:
                     killed(sender,p);
