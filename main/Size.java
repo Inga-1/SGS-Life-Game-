@@ -73,11 +73,11 @@ public enum Size {
     public int getAmountAcq(){
         switch (this){
             case SMALL:
-                return 10;
+                return 14;
             case MEDIUM:
-                return 24;
+                return 30;
             case LARGE:
-                return 47;
+                return 60;
             default:
                 throw new IllegalStateException("Unexpected value: " + this);
         }
