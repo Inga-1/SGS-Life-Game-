@@ -52,10 +52,12 @@ public class Player extends Game{
            //if(size - actives > 0){
            // //Player Id/ child = new Player(all of the stuff)
            //actives.add(id/child)
-          // player1.SetBoard(ChildrenCounter + beggining index of children depending on size of the world) with child
-        // player2.SetBoard(ChildrenCounter + beggining index of children depending on size of the world) with child
-        // id/child.SetBoard(place set by size of the world) with player1
-        // id/child.SetBoard(place set by the world +1 ) with player2
+          // player1.SetBoardElement(ChildrenCounter + beggining index of children depending on size of the world, child tuple)
+        // player2.SetBoardElement(ChildrenCounter + beggining index of children depending on size of the world , child tuple) 
+        // get metgod fpr player1 tuple
+        // id/child.SetBoardElement(place set by size of the world, tuple of player1) 
+        // get method for player2 tuple
+        // id/child.SetBoardElement(place set by the world +1 , tuple of player2) 
            // W SRODKU  if(Player1 isMember == true || Player2 isMember == true){ SETNAC MU ZE JEST W CULT
     //}
            //}
