@@ -71,6 +71,7 @@ public class Game implements Runnable{
             switch (el){
                 case MEET:
                     if(sender // not in board==> SHOULD I CHECK SENDER TUPLE???){
+                        p.MeetsCounter++;
                         p.SetBoardElement(size-1, sender);
                        //gaining on stats
                     }
@@ -85,6 +86,7 @@ public class Game implements Runnable{
                     break;
                 case FRIEND:
                     if(sender // not in boards space for friends based on size==> SHOULD I CHECK SENDER TUPLE???){
+                       p.FriendsCounter++;
                         //p.SetBoardElement(index of friends based on size + p.FriendsCounter , sender);
                        //gaining on stats
                     }
