@@ -73,7 +73,7 @@ public class Game implements Runnable{
             switch (el){
                 case MEET:
                     Tuple SenderId = sender.getBoardElement(0);
-                    if(board.contains(SenderId)){
+                    if(p.board.contains(SenderId)){
 
                        //losing on stats
                     }
