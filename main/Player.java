@@ -77,6 +77,8 @@ public class Player extends Game{
     }
 
     public void kill(Player victim){
+        //with argument if one of the players have overgone some threshold then it will kill the sender/receiver
+        
 
     }
 }
