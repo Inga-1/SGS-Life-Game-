@@ -112,7 +112,9 @@ public class Game implements Runnable{
         
                     break;
                 case KILLED:
-                    killed(sender,p);
+                    //if(p.statsofanger > threshhold){p.kill(sender)}
+                    // if(sender.statsofanger > threshhold){}sender.kill(p)}
+                   //else{}
                     break;
                 case ARGUE:
                     //if someone argues with leader they get kicked out
@@ -120,7 +122,7 @@ public class Game implements Runnable{
                         this.cultLeader.kickOut(sender.cultMember);
                     }
                     break;
-                case FAILEDKILL:
+                case FAILEDKILL: // do we need to have it?
                     if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
                         p.kill(sender);
                     }
@@ -149,13 +151,5 @@ public class Game implements Runnable{
     public String seeActives(){
         return actives.toString();
     }
-    public void killed(Player killer,Player victim){
-        victim.status=0;//not active anymore
-        if(victim.isMember){
-            int i=victim.getCultIndex();
-            this.cult.cult.remove(i);
-        }
-        actives.remove(victim.id);
-        System.out.println(victim.id+" has been killed by "+killer.id);
-    }
+    
 }
