@@ -80,7 +80,15 @@ public class Game implements Runnable{
                 //attemps on Leader (con artist event) is outside loop (doesnt get reset)
 
                 for(Player p:actives){
-                    update(p);
+
+                    //update age
+                    int age=p.stats.getAge();
+                    p.stats.setAge(age+1);
+                    if(age>49){
+                        //die (same method used for the deaths in default)
+                    }
+
+                    if(p.status==1){update(p);}
                     System.out.println("updated");
                     Thread.sleep(500);
                 }
@@ -195,13 +203,6 @@ public class Game implements Runnable{
         int faith=p.stats.getFaith();
         if(faith==20){maxFaith++;} else if (faith==0) {
             minFaith++;
-        }
-
-        //update age
-        int age=p.stats.getAge();
-        p.stats.setAge(age+1);
-        if(age>99){
-            //die (same method used for the deaths in default)
         }
 
     }
