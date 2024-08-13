@@ -72,14 +72,15 @@ public class Game implements Runnable{
             Player sender= actives.get(idsender);
             switch (el){
                 case MEET:
-                    Tuple SenderId = sender.getBoardElement(0);
-                    if(p.board.contains(SenderId)){
-
-                       //losing on stats
-                    }
-                    else{
-                        p.MeetsCounter++;
-                        p.SetBoardElement(size-1, SenderId);}
+                    //Tuple SenderId = sender.getBoardElement(0);
+                    //if(p.board.contains(idsender) == true){
+                        for(int i = 0; i < //p.size/len; i++){
+                            String idneeded = p.board[i].get(key);
+                            if(idneeded == idsender){
+                                p.MeetsCounter++;
+                        p.SetBoardElement(size-1, SenderId);}}
+                        else{//losing stats}
+                        }
                     break;
                 case RECRUITED:
                     if( p.isMember != true // && stats are ok){
@@ -89,7 +90,9 @@ public class Game implements Runnable{
                     break;
                 case FRIEND:
                     
-                    //if(p.board[//range for friends].contains(SenderId)){
+                    //for(int i = 0; i < //p.size/len; i++){
+                         //   String idneeded = p.board[i].get(key);
+                          //  if(idneeded == idsender){
                        
                         //losing on stats
                         
