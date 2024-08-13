@@ -82,9 +82,10 @@ public class Game implements Runnable{
                         p.SetBoardElement(size-1, SenderId);}
                     break;
                 case RECRUITED:
-                    if( p.isMember == true){
+                    if( p.isMember != true // && stats are ok){
+                       addMember(p)
                     }
-                    else{addMember(p)}
+                    else{if(sender.isMember == true){sender.pray()}}
                     break;
                 case FRIEND:
                     
