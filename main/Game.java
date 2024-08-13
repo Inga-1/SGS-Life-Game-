@@ -70,7 +70,8 @@ public class Game implements Runnable{
             Player sender= actives.get(idsender);
             switch (el){
                 case MEET:
-                    if(sender // not in board==> SHOULD I CHECK SENDER TUPLE???){
+                    //get method for sender tuple
+                    if(sender // not in board==>){
                         p.MeetsCounter++;
                         p.SetBoardElement(size-1, sender);
                        //gaining on stats
@@ -87,7 +88,7 @@ public class Game implements Runnable{
                 case FRIEND:
                     if(sender // not in boards space for friends based on size==> SHOULD I CHECK SENDER TUPLE???){
                        p.FriendsCounter++;
-                        //p.SetBoardElement(index of friends based on size + p.FriendsCounter , sender);
+                        //p.SetBoardElement(place when we start index of friends + p.FriendsCounter , senders tuple);
                        //gaining on stats
                     }
                     else{//losing on stats}
@@ -100,12 +101,10 @@ public class Game implements Runnable{
                         else{//losing on stats}
                     //if(3rd place of the array not taken){ SetBoard(2=index) to be his lover}
                     //else{// maybe some loss of charisma for sender???}
-                    break;
+                     break;
                 case CHILD:
-                    p.MakeChildren(Player p, Player sender)
-                    // if(there are places in the world && children array of p is not full && children array of sender not full){
-                    // WE NEED TO MAKE CHILDREN SOMEHOW == WOULD DO THAT IN PLAYER CLASS EXTEND IT AND CALL IT FROM SUPER.METHODTOMAKECHILDREN
-                    //{
+                      MakeChildren(Player p, Player sender)
+        
                     break;
                 case KILLED:
                     killed(sender,p);
