@@ -66,19 +66,19 @@ public class Game implements Runnable{
             //i is position of sender in board(index of profile)
             int senderPosition=i;
             Messages el=profile.getProfileElement(i);
-            int idsender=board.getBoardElement(i).getFirst();
+            int idsender=board.getBoardElement(i).getFirst(); //i know here we get info about sender but its int so not the full tuple???
+            
             Player sender= actives.get(idsender);
             switch (el){
                 case MEET:
-                    //get method for sender tuple
-                    if(sender // not in board==>){
-                        p.MeetsCounter++;
-                        p.SetBoardElement(size-1, sender);
-                       //gaining on stats
+                    Tuple SenderId = sender.getBoardElement(0);
+                    if(board.contains(SenderId)){
+
+                       //losing on stats
                     }
-                    else{//losing on stats}
-                    //Puting newly met person in array of aquaintances w przedziale set by size of the world
-                    // if sender not in array of aquaintances : SetBoardElement(pre-last place){this met person}
+                    else{
+                        p.MeetsCounter++;
+                        p.SetBoardElement(size-1, SenderId);}
                     break;
                 case RECRUITED:
                     if( p.isMember == true){
@@ -86,21 +86,24 @@ public class Game implements Runnable{
                     else{addMember(p)}
                     break;
                 case FRIEND:
-                    if(sender // not in boards space for friends based on size==> SHOULD I CHECK SENDER TUPLE???){
-                       p.FriendsCounter++;
-                        //p.SetBoardElement(place when we start index of friends + p.FriendsCounter , senders tuple);
-                       //gaining on stats
+                    
+                    if(p.board.contains(SenderId)){
+                       
+                        //losing on stats
+                        
                     }
-                    else{//losing on stats}
-                    //if (sender not in space in array for friends){check for null place in friends sector in array==> while loop==> when we find it setBoard to this friend
+                    else{p.FriendsCounter++;
+                         // gaining on stats
+                        //if (sender not in space in array for friends){check for null place in friends sector in array==> while loop==> when we find it setBoard to this friend
+                        }
                     break;
                 case LOVER:
                     if(p.board[2] == null){
-                        p.SetBoardElement(2, sendertuple?)
+                        p.SetBoardElement(2, SenderId)
                     }
                         else{//losing on stats}
                     //if(3rd place of the array not taken){ SetBoard(2=index) to be his lover}
-                    //else{// maybe some loss of charisma for sender???}
+                     
                      break;
                 case CHILD:
                       MakeChildren(Player p, Player sender)
