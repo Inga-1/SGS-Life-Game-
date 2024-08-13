@@ -50,7 +50,7 @@ public class Stats {
     }
     public void randomizeStats() {
         Random random = new Random();
-        setFaith(0);//change in 10 when becoming Cult Member, then max is 20
+        setFaith(0);//change in 5 when becoming Cult Member, then max is 10
         setAge(random.nextInt(51));
 
         setCharisma(random.nextInt(5));

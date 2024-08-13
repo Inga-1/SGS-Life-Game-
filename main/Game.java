@@ -201,7 +201,7 @@ public class Game implements Runnable{
 
         //for EVENTS
         int faith=p.stats.getFaith();
-        if(faith==20){maxFaith++;} else if (faith==0) {
+        if(faith==10){maxFaith++;} else if (faith==0 && p.isMember) {
             minFaith++;
         }
 
