@@ -1,5 +1,8 @@
 package main;
 import java.util.ArrayList;
+import java.util.Random;
+
+
 public class Game implements Runnable{
     private ArrayList<Player> actives;
     private int maxsize; //from input
@@ -39,11 +42,43 @@ public class Game implements Runnable{
         gameThread= new Thread(this);
         gameThread.start();
     }
+
+    //for OUTPUT
+    int murdered;
+    int deaths;
+    int suicides;
+    int babiesBorn;
+    int newMembers;
+    int membersEscaped;
+    int membersKickedOut;
+
+    //for EVENTS
+    int maxFaith;//mass suicide event
+    int minFaith;//rebellion event
+    int attemptsOnLeader;//con artist event
+
     @Override
     public void run() {
         try {
             while(gameThread!=null){
                 System.out.println("It's still going...");
+
+                //for OUTPUT
+                int murdered=0;
+                int deaths=0;
+                int suicides=0;
+                int babiesBorn=0;
+                int newMembers=0;
+                int membersEscaped=0;
+                int membersKickedOut=0;
+                //maybe we could also display at end of each round the cult stats
+
+
+                //for EVENTS
+                int maxFaith=0;//mass suicide event
+                int minFaith=0;//rebellion event
+                //attemps on Leader (con artist event) is outside loop (doesnt get reset)
+
                 for(Player p:actives){
                     update(p);
                     System.out.println("updated");
@@ -106,20 +141,69 @@ public class Game implements Runnable{
                 case FAILEDKILL:
                     if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
                         p.kill(sender);
+                        attemptsOnLeader++;
                     }
                     break;
                 case FAILEDESCAPE:
                     if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
-                        sender.cultMember.hardWork();
+                        //idk, maybe put in enemies of leader
                     }
                     break;
                 default:
+
+                    Random random = new Random();
+                    int j=random.nextInt(25);
+
+                    if (j<4){
+                        //meet
+                    } else if (j<7) {
+                        //friend
+                    } else if(j<9){
+                        //lover
+                    } else if (j<11) {
+                        //argue
+                    } else if (j<15) {
+                        if(p.isMember){}
+                        //pray
+                    } else if (j<19) {
+                        if(p.isMember && p.stats.getWillpower()>=2){}
+                        //question
+                    } else if (j<24) {
+                        if(p.isMember){}
+                        //recruit
+                    } else {
+                        //dies
+                        //maybe we could do two methods, suicide and death for illness, that do the exact same thing
+                        //(which is probably similar to killed method), but one updates suicides and the other deaths;
+
+                        //also suicide might be only if willpower is 4 or 5
+                    }
+
+                    //meet(4),friend(3),find lover(2),argue(3)
+                    //if member: pray,question(4)(4),recruit(3)
+                    //RARE: die of illness(1)
+
+
                     //random action, according to relationship to random player
                     //make it have a probability to happen otherwise we have too many interactions going on
                     //if the player is a cult member, they could also just pray
                     break;
             }
         }
+
+        //for EVENTS
+        int faith=p.stats.getFaith();
+        if(faith==20){maxFaith++;} else if (faith==0) {
+            minFaith++;
+        }
+
+        //update age
+        int age=p.stats.getAge();
+        p.stats.setAge(age+1);
+        if(age>99){
+            //die (same method used for the deaths in default)
+        }
+
     }
     public String seeActives(){
         return actives.toString();

@@ -15,9 +15,6 @@ public abstract class CultMember extends Player{
     public void question(){
         //lowers faith
     }
-    public void hardWork(){
-        //lowers health and happiness
-    }
     public void changeRole(Role r){
         role=r;
     }
