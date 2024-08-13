@@ -77,9 +77,14 @@ public class Player extends Game{
         //add Exception (try/catch)
     }
 
-    public void kill(Player victim){
-        victim.status = 0;
-        //with argument if one of the players have overgone some threshold then it will kill the sender/receiver
+    public void kill(Player killer,Player victim){ 
+        victim.status=0;
+        if(victim.isMember){
+            int i=victim.getCultIndex();
+            this.cult.cult.remove(i);
+        }
+        actives.remove(victim.id);
+        System.out.println(victim.id+" has been killed by "+killer.id);
     }
 }
 
