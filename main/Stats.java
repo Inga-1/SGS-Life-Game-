@@ -56,4 +56,13 @@ public class Stats {
         setCharisma(random.nextInt(5));
         setWillpower(random.nextInt(5));
     }
+
+    public String toString(){
+        int a=getAge();
+        int f=getFaith();
+        int c=getCharisma();
+        int w=getWillpower();
+
+        return "age("+a+"), faith("+f+"), charisma("+c+"), willpower("+w+")";
+    }
 }

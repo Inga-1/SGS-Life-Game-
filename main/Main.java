@@ -29,7 +29,6 @@ public class Main {
         System.out.println("Chosen size: "+size.name);
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
         /*Player p=new Player('a',10,10);
         System.out.println(p.toString());
         Board b=p.getBoard();*/
@@ -45,9 +44,7 @@ public class Main {
         Leader l2=(Leader)l;*/
 
         //STILL TO ADD:
-        //array of stats(or can just be constants)
-        //indices for diff acquaintances(put it in board)
         //methods for actions
-        //death by age (add age stat)-->payoff in profile
+        //death by age (add age stat)-->payoff in profile?
     }
 }

@@ -3,9 +3,15 @@ package main;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class Data {
-
+    String name;
+    String surname;
+    char gender;
+    public Data(){
+        randomiseData();
+    }
     //names
     public static List<Tuple> names = new ArrayList<>(Arrays.asList(
             new Tuple<String, Character>("Aaron",'m'),
@@ -270,4 +276,14 @@ public class Data {
             "Williams",
             "Young"
             ));
+
+    public void randomiseData(){
+        Random random = new Random();
+        int i=random.nextInt(names.size());
+        int j=random.nextInt(surnames.size());
+
+        this.name=(String) names.get(i).getFirst();
+        this.gender=(char) names.get(i).getSecond();
+        this.surname=surnames.get(j);
+    }
 }

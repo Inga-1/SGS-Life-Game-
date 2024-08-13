@@ -9,6 +9,9 @@ public class Player{
     protected Cult cult;
     protected Game game;
     protected Stats stats;
+    protected String name;
+    protected String surname;
+    protected char gender;
     protected Board board;
     protected Profile profile;
     protected Tuple<Board, Profile> config;
@@ -16,10 +19,20 @@ public class Player{
     public Player(int id, Size size, Game game){
         this.id=id;
         this.game=game;
+
         status=1;
+        Stats stats=new Stats();
         stats.randomizeStats();
+        this.stats=stats;
+
+        Data data=new Data();
+        this.name=data.name;
+        this.surname=data.surname;
+        this.gender=data.gender;
+
         isMember=false;
         this.cultMember=null;
+
         board=new Board(id,size);
         profile=new Profile(size);
         config=new Tuple<>(board,profile);
@@ -28,7 +41,7 @@ public class Player{
         String bs=board.toString();
         String ps=profile.toString();
         Tuple<String,String> test=new Tuple<>(bs,ps);
-        String s="id: "+this.id+"\nboard: "+bs+"\nprofile: "+ps+"\nconfiguration: "+test.toString();
+        String s="id: "+this.id+"\nstatus: "+this.status+"\nname: "+this.name+"\nsurname: "+this.surname+"\ngender: "+this.gender+"\n\nstats: "+this.stats.toString()+"\n\nboard: "+bs+"\nprofile: "+ps+"\nconfiguration: "+test.toString();
         return s;
     }
     public Board getBoard(){
