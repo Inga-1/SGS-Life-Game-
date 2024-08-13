@@ -113,8 +113,8 @@ public class Game implements Runnable{
         
                     break;
                 case KILLED:
-                    //if(p.statsofanger > threshhold){p.kill(sender)}
-                    // if(sender.statsofanger > threshhold){}sender.kill(p)}
+                    //if(p.statsofanger > threshhold){p.kill(p, sender)}
+                    // if(sender.statsofanger > threshhold){}sender.kill(sender ,p)}
                    //else{}
                     break;
                 case ARGUE:
