@@ -59,6 +59,7 @@ public class Player extends Game{
            // ChildrenCounter ++;
            // //Player Id/ child = new Player(all of the stuff)
            //actives.add(id/child)
+          // id/child get method
           // player1.SetBoardElement(ChildrenCounter + beggining index of children depending on size of the world, child tuple)
         // player2.SetBoardElement(ChildrenCounter + beggining index of children depending on size of the world , child tuple) 
         // get metgod fpr player1 tuple
@@ -77,9 +78,8 @@ public class Player extends Game{
     }
 
     public void kill(Player victim){
+        victim.status = 0;
         //with argument if one of the players have overgone some threshold then it will kill the sender/receiver
-        
-
     }
 }
 
