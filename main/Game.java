@@ -99,7 +99,8 @@ public class Game implements Runnable{
                         }
                     break;
                 case LOVER:
-                    if(p.board[2] == null){
+                    int rand_int1 = rand.nextInt(1);
+                    if(p.board[2] == null  && rand_int == 1){
                         p.SetBoardElement(2, SenderId)
                     }
                         else{//losing on stats}
