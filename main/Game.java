@@ -88,7 +88,7 @@ public class Game implements Runnable{
                     break;
                 case FRIEND:
                     
-                    if(p.board.contains(SenderId)){
+                    //if(p.board[//range for friends].contains(SenderId)){
                        
                         //losing on stats
                         
