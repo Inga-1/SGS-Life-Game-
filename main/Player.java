@@ -72,12 +72,20 @@ public class Player{
         return i;
         //add Exception (try/catch)
     }
-    public void MakeChildren(){
-        if( this.ChildrenCounter < getAmountChildren(size)){
-            if( size - actives > 0){
+    public void MakeChildren(Player player1, Player player2){
+        if( player1.ChildrenCounter < getAmountChildren(size) && player2.ChildrenCounter < getAmountChildren(size)){
+            if( size - actives > 0){ //spr czy dostepne dane
                 this.ChildrenCounter++;
-                
-                
+                Player PlayerChild = new Player(actives+1,size,this); //zeby ID sie zgadzalo
+                actives.add(PlayerChild);
+                player1.SetBoardElement(); //dodac indeksy
+                player2.SetBoardElement(); //dodac indeksy
+                PlayerChild.SetBoardElement(); //dodac indeksy
+                PlayerChild.SetBoardElement(); //dodac indeksy
+                if(player1.isMember() == true || player2.isMember() == true){
+                    PlayerChild.isMember == true;
+                    
+                }
             }
         }
     }
