@@ -6,9 +6,9 @@ import java.util.Scanner;
 
 
 public class Game implements Runnable{
-    private ArrayList<Player> actives;
+    ArrayList<Player> actives;
     private int maxsize; //from input
-    private Size size;
+    Size size;
     private int activesSize;
     private int possibleChildren;
     private Leader cultLeader;
@@ -97,8 +97,8 @@ public class Game implements Runnable{
 
                     if(p.status==1){update(p);}
                     System.out.println("updated");
-                    Thread.sleep(500);
                 }
+                Thread.sleep(500);
                 // Making thread sleep for 0.5 seconds
 
                 //OUTPUT
@@ -109,8 +109,9 @@ public class Game implements Runnable{
                 System.out.println("\nIN THE CULT:");
                 System.out.println(+newMembers+" new members were recruited,");
                 System.out.println(+membersEscaped+" members have betrayed us and run away,");
-                System.out.println(+membersKickedOut+" members were kicked out,");
+                System.out.println(+membersKickedOut+" members were kicked out.\n");
 
+                Thread.sleep(500);
                 //CONTINUE?
                 Scanner myObj = new Scanner(System.in);
                 System.out.println("Do you want to continue with the story? Press 1 to continue or 2 to quit:");
@@ -124,11 +125,12 @@ public class Game implements Runnable{
                     default:
                         throw new IllegalStateException("Unexpected value: " + o);
                 }
+                Thread.sleep(500);
             }
         }
         // Catch block to handle exception
         catch (InterruptedException e) {
-            System.out.println("stop");
+            System.out.println("The End.");
         }
     }
     //create methods to update each configuration (feedback function)
@@ -145,49 +147,76 @@ public class Game implements Runnable{
             //i is position of sender in board(index of profile)
             int senderPosition=i;
             Messages el=profile.getProfileElement(i);
-            int idsender=board.getBoardElement(i).getFirst(); //i know here we get info about sender but its int so not the full tuple???
+            int idsender=0;
+            if (board.getBoardElement(i).getFirst()!=null){
+                idsender=board.getBoardElement(i).getFirst();
+            }
+            int yourIndex=0;
+            if (board.getBoardElement(i).getSecond()!=null){
+                yourIndex=board.getBoardElement(i).getSecond();
+            }
+            //i know here we get info about sender but its int so not the full tuple???
             Player sender= actives.get(idsender);
             switch (el) {
                 case MEET:
-                    //Tuple SenderId = sender.getBoardElement(0);
-                    //if(p.board.contains(idsender) == true){
-                    for (int j = 0; j < p.board.len; j++) {
-                        int idneeded = p.board.board[j].getFirst(); // idk if that's key and if its not better to do just second loop
-                        if (idneeded != idsender) {
-                            p.MeetsCounter++;
-                            p.setBoardElement(new Tuple(idsender, p.board.len - 1));
-                        }
-                    }
-                    break;
+
+                    //THIS IS ALL GONNA GO IN DEFAULT
+                    //we do the checks when someone wants to meet us
+                    //who receives the message is a stranger and the sender is also a stranger to the receiver
+                    //and we also check if they both have space
+                    //we just need to add to board
+
+                    //they also have already put themselves in our board and us in theirs
+                    //we just return them a NONE message
                 case RECRUITED:
-                    if( p.isMember != true){ // && stats are ok
+                    if(!p.isMember){
                        this.cult.addMember(p);
                     }else{
-                        if(sender.isMember == true){sender.cultMember.pray();}
+                        sender.cultMember.pray();
+                        //to even send the recruit message you have to be a member first, so no need to check
                     }
                     break;
                 case FRIEND:
-                    for(int k = 0; k < p.board.len; i++){
-                        int idneeded = p.board.board[k].getFirst(); // idk if that's key and if its not better to do just second loop
-                        if (idneeded != idsender) {
-                            //losing on stats
-                        } else {
-                            p.FriendsCounter++;
-                            // gaining on stats
-                            //if (sender not in space in array for friends){check for null place in friends sector in array==> while loop==> when we find it setBoard to this friend
-                        }
+
+                    //same for this as in meet
+                    //we check when we do the action, not the reaction
+                    if(p.FriendsCounter<=this.size.getAmountFriends() && sender.FriendsCounter<=this.size.getAmountFriends()){
+                        int newPositionP=p.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
+                        int newPositionS=sender.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
+                        p.board.setBoardElement(newPositionP, new Tuple(idsender, newPositionS));
+                        p.FriendsCounter++;
+                        sender.board.setBoardElement(newPositionS, new Tuple(idsender, newPositionP));
+                        sender.FriendsCounter++;
+
+                        p.board.board[senderPosition]=null;
+                        p.decreaseConsts(senderPosition);
+                        sender.board.board[yourIndex]=null;
+                        p.decreaseConsts(yourIndex);
+                    }else{
+                        //send them NONE message
                     }
+
                     break;
                 case LOVER:
-                    int rand_int1 = rand.nextInt(1);
-                    if(p.board[2] == null  && rand_int == 1){
-                        p.SetBoardElement(2, SenderId)
+                    Random rand = new Random();
+                    int rand_int1 = rand.nextInt(2);
+                    if(p.board.board[2].getFirst()==null  && p.board.board[2].getSecond()==null && rand_int1 == 1){
+                        p.board.setBoardElement(2, new Tuple<>(idsender,2));
+                        sender.board.setBoardElement(2,new Tuple<>(p.id,2));
+
+                        p.board.board[senderPosition]=null;
+                        p.decreaseConsts(senderPosition);
+                        sender.board.board[yourIndex]=null;
+                        p.decreaseConsts(yourIndex);
+                        //remove lover from previous position in array and you from theirs
+                    }else{
+                        //send NONE message
                     }
                     //if(3rd place of the array not taken){ SetBoard(2=index) to be his lover}
 
                      break;
                 case CHILD:
-                      p.MakeChildren(Player p, Player sender);
+                      p.MakeChildren(p, sender);
                     break;
                 case KILLED:
                     killed(sender,p);
@@ -200,7 +229,7 @@ public class Game implements Runnable{
                     break;
                 case FAILEDKILL: // do we need to have it?
                     if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
-                        p.kill(sender);
+                        p.kill(p,sender);
                         attemptsOnLeader++;
                     }
                     break;
@@ -210,15 +239,40 @@ public class Game implements Runnable{
                     }
                     break;
                 default:
+                    //When we are SENDING messages, NOT RECEIVING
 
                     Random random = new Random();
                     int j=random.nextInt(25);
+                    int idreceiver=random.nextInt(activesSize);
+                    Player receiver= actives.get(idreceiver);
 
                     if (j<4){
                         //meet
+                        if(!p.isInBoard(idreceiver) && p.MeetsCounter<=this.size.getAmountAcq() && receiver.MeetsCounter<=this.size.getAmountAcq()){
+                            //in BOARD
+                            int newPositionP=p.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
+                            int newPositionR=receiver.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
+                            p.board.setBoardElement(newPositionP, new Tuple(idreceiver, newPositionR));
+                            p.MeetsCounter++;
+                            sender.board.setBoardElement(newPositionR, new Tuple(idreceiver, newPositionP));
+                            sender.MeetsCounter++;
+
+                            //in PROFILE(messages)
+                            //send meet message
+                        }else{
+                            //one of the default actions
+                        }
                     } else if (j<7) {
-                        if(p.stats.getAge()>19){}
-                        //friend
+                        if(p.stats.getAge()>19) {
+                            if (!p.isInFriends(idreceiver)
+                                    && p.MeetsCounter<=this.size.getAmountFriends()
+                                    && receiver.MeetsCounter<=this.size.getAmountFriends()
+                                    && p.isInAcq(idreceiver)) {
+                                //send friend message
+                            } else {
+                                //one of the default actions
+                            }
+                        }
                     } else if(j<9){
                         if(p.stats.getAge()>19){}
                         //lover
@@ -226,14 +280,17 @@ public class Game implements Runnable{
                         if(p.stats.getAge()>19){}
                         //argue
                     } else if (j<15) {
-                        if(p.isMember){}
-                        //pray
+                        if(p.isMember){
+                            p.cultMember.pray();
+                        }
                     } else if (j<19) {
-                        if(p.isMember && p.stats.getWillpower()>=1){}
-                        //question
+                        if(p.isMember && p.stats.getWillpower()>=1){
+                            p.cultMember.question();
+                        }
                     } else if (j<24) {
                         if(p.isMember && p.stats.getAge()>19){}
                         //recruit
+                        //just sends recruit message
                     } else {
                         if(p.stats.getAge()>19){}
                         //dies
@@ -295,7 +352,7 @@ public class Game implements Runnable{
         }
     }
     public void massSuicide(){
-        System.out.println(this.cultLeader.name+" "+this.cultLeader.surname+"reached his goal.\nAll their followers gave their lives for them in a mass suicide drinking CocaCola with bleach, the sacred drink.\nThey felt fulfilled for a while, they even wanted to start another cult. \nWhen they were about to skip town the cops arrested them. \nWhat he didn’t know was that there was a survivor, their lover sneaked out during the turmoil and their testimony was useful to catch them. Now "+this.cultLeader.name+" spends the rest of their days in prison.");
+        System.out.println(this.cultLeader.name+" "+this.cultLeader.surname+" reached their goal.\nAll their followers gave their lives for them in a mass suicide drinking CocaCola with bleach, the sacred drink.\nThey felt fulfilled for a while, they even wanted to start another cult. \nWhen they were about to skip town the cops arrested them. \nWhat he didn’t know was that there was a survivor, their lover sneaked out during the turmoil and their testimony was useful to catch them. \nNow "+this.cultLeader.name+" spends the rest of their days in prison.");
         terminateGame();
     }
 
