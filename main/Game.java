@@ -151,6 +151,7 @@ public class Game implements Runnable{
                 case MEET:
                     //Tuple SenderId = sender.getBoardElement(0);
                     //if(p.board.contains(idsender) == true){
+
                     for (int j = 0; j < p.board.len; j++) {
                         int idneeded = p.board.board[j].getFirst(); // idk if that's key and if its not better to do just second loop
                         if (idneeded != idsender) {
