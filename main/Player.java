@@ -86,7 +86,6 @@ public class Player{
            // W SRODKU  if(Player1 isMember == true || Player2 isMember == true){ SETNAC MU ZE JEST W CULT
     //}
            //}
-    }
     public SimpleMember makeMember(){
         SimpleMember c = new SimpleMember(this.id,board.size,this.game);
         this.cultMember=c;
