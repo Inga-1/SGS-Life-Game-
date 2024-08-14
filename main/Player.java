@@ -78,8 +78,8 @@ public class Player{
                 this.ChildrenCounter++;
                 Player PlayerChild = new Player(size.actives + 1,size,this); //zeby ID sie zgadzalo
                 actives.add(PlayerChild);
-                player1.SetBoardElement(); //dodac indeksy
-                player2.SetBoardElement(); //dodac indeksy
+                player1.SetBoardElement(3+ player1.ChildrenCounter, newTuple(PlayerChild.id ,3+ player1.ChildrenCounter)); //dodac indeksy
+                player2.SetBoardElement(3+ player2.ChildrenCounter, newTuple(PlayerChild.id ,3+ player2.ChildrenCounter)); //dodac indeksy
                 PlayerChild.SetBoardElement(); //dodac indeksy
                 PlayerChild.SetBoardElement(); //dodac indeksy
                 if(player1.isMember() == true || player2.isMember() == true){
@@ -89,21 +89,6 @@ public class Player{
             }
         }
     }
-        
-    //public int BeginningChildrenInterval(){
-       // return 3;
-   // }
-  //  public int EndChildrenInterval(){
-       // return getAmountChildren()+2;
-   // }
-
-
-
-
-
-
-
-    
     public SimpleMember makeMember(){
         SimpleMember c = new SimpleMember(this.id,board.size,this.game);
         this.cultMember=c;
