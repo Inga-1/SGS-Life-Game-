@@ -83,7 +83,7 @@ public class Player{
                 PlayerChild.SetBoardElement(); //dodac indeksy
                 PlayerChild.SetBoardElement(); //dodac indeksy
                 if(player1.isMember() == true || player2.isMember() == true){
-                    PlayerChild.isMember == true;
+                    addMember(p);
                     
                 }
             }
