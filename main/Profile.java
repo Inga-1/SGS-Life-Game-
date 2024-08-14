@@ -5,7 +5,8 @@ import java.util.Arrays;
 public class Profile {
     private Messages[] profile;
     protected int len;
-    public Profile(int p){
+    public Profile(Size s){
+        int p=s.maxSize;
         this.len=p;
         profile=new Messages[p];
         Arrays.fill(profile,Messages.NONE);
