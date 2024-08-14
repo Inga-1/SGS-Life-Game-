@@ -6,6 +6,7 @@ public class Player{
     protected int MeetsCounter;
     protected int FriendsCounter;
     protected int ChildrenCounter;
+    protected int EnemiesCounter;
 
     protected int id;
     protected boolean isMember;
@@ -26,6 +27,7 @@ public class Player{
         this.ChildrenCounter = 0;
         this.FriendsCounter = 0;
         this.MeetsCounter = 0;
+        this.EnemiesCounter=0;
 
         this.id=id;
         this.game=game;
@@ -108,6 +110,69 @@ public class Player{
             this.cult.cult.remove(i);
         }
         this.game.actives.remove(victim.id);
-        System.out.println(victim.id+" has been killed by "+killer.id);
+        System.out.println(victim.name+" has been killed by "+killer.name);
+    }
+
+    public boolean isInBoard(int idperson){
+        for (int j = 0; j < this.board.len; j++) {
+            int idneeded = this.board.board[j].getFirst();
+            if (idneeded == idperson) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isInFriends(int idperson){
+        int beginning=this.game.size.BeginningFriendsInterval();
+        int end=this.game.size.EndFriendsInterval();
+        for(int k = beginning; k <= end; k++){
+            int idneeded = this.board.board[k].getFirst(); // idk if that's key and if its not better to do just second loop
+            if (idneeded == idperson) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isInAcq(int idperson){
+        int beginning=this.game.size.BeginningAcqInterval();
+        int end=this.game.size.EndAcqInterval();
+        for(int k = beginning; k <= end; k++){
+            int idneeded = this.board.board[k].getFirst(); // idk if that's key and if its not better to do just second loop
+            if (idneeded == idperson) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isInEnemies(int idperson){
+        int beginning=this.game.size.BeginningEnemiesInterval();
+        int end=this.game.size.EndEnemiesInterval();
+        for(int k = beginning; k <= end; k++){
+            int idneeded = this.board.board[k].getFirst(); // idk if that's key and if its not better to do just second loop
+            if (idneeded == idperson) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void decreaseConsts(int index){
+        if (index>=this.game.size.BeginningAcqInterval() && index<=this.game.size.EndAcqInterval()){
+            this.MeetsCounter--;
+        } else if (index>=this.game.size.BeginningFriendsInterval() && index<=this.game.size.EndFriendsInterval()) {
+            this.FriendsCounter--;
+        } else if (index>=this.game.size.BeginningChildrenInterval() && index<=this.game.size.EndChildrenInterval()) {
+            this.ChildrenCounter--;
+        } else if (index>=this.game.size.BeginningEnemiesInterval() && index<=this.game.size.EndEnemiesInterval()) {
+            this.EnemiesCounter--;
+        }
+    }
+
+    public int findEmptySpotInBoard(int beginning,int end){
+        for(int i=beginning;i<=end;i++){
+            if(this.board.board[i].getFirst()==null){return i;}
+        }
+        return 0;
     }
 }

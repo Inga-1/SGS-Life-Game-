@@ -32,6 +32,12 @@ public class Main {
         System.out.println("Chosen size: "+size.name);
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        /*Game game=new Game(size);
+        game.startGame();
+        game.gameThread.sleep(10000);
+        game.massSuicide();*/
+
+
         /*Player p=new Player('a',10,10);
         System.out.println(p.toString());
         Board b=p.getBoard();*/
