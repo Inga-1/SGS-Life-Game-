@@ -2,9 +2,11 @@ package main;
 
 public class Leader extends CultMember{
 
-    public Leader(int id, int size, Cult cult) {
-        super(id, size,cult);
+    public Leader(int id, Size size, Game game) {
+        super(id, size,game);
         this.role=Role.LEADER;
+        this.stats.setCharisma(4);
+        this.stats.setWillpower(4);
     }
     //diff stats compared to others
 
@@ -19,13 +21,4 @@ public class Leader extends CultMember{
         //happens when  member tries to escape and fails --> hard work
         //or when member argues with leader -->kick out
         //or when member tries to kill leader --> kill member
-
-
-    //elect priests and shaman
-    public void electShaman(CultMember p){
-        //make shaman class
-    }
-    public void electPriest(CultMember p){
-        //make priest class
-    }
 }

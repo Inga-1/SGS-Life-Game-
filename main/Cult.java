@@ -3,14 +3,11 @@ import java.util.ArrayList;
 public class Cult {
     public ArrayList<CultMember> cult;
     private Leader leader;
-    private boolean started;//0 not started, 1 started
+    boolean started;//0 not started, 1 started
     private String god;
-    private Player shaman;
     public Cult(){
         cult=new ArrayList<CultMember>();
-        this.leader=null;
         this.god="Loki"; //make it get from input
-        this.shaman=null;
         this.started=false;
         cult.add(leader);
     }
@@ -18,8 +15,13 @@ public class Cult {
         this.leader=leader;
     }
     public void addMember(Player p){
+        if(!this.started){this.started=true;}
         p.isMember=true;
         CultMember c=p.makeMember();
         cult.add(c);
+    }
+    public void removeMember(Player p){
+        p.isMember=false;
+        cult.add(p.cultMember);
     }
 }

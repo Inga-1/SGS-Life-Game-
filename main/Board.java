@@ -4,9 +4,14 @@ import java.util.Arrays;
 public class Board{
     protected Tuple<Integer,Integer>[] board;
     protected int len;
-    public Board(int id, int b){
+    Size size;
+    public Board(int id, Size s){
+        int b=s.maxSize;
         board=new Tuple[b];
+
+        this.size=size;
         this.len=b;
+
         Arrays.fill(board, new Tuple(null,null));
         board[0]=new Tuple<Integer,Integer>(id,1);
     }

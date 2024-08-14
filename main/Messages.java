@@ -1,19 +1,18 @@
 package main;
 
 public enum Messages {
-    NONE(0),
-    MEET(1), //become acquaintances
-    RECRUITED(2), //become part of cult
-    FRIEND(3), //become friends
-    LOVER(4), //become lovers
-    CHILD(5), //make children-->sigma function
-    ARGUE(6), //arguing with you
-    KILLED(7), //you have been killed
-    FAILEDKILL(8),
-    FAILEDESCAPE(9);
+    NONE("no messages"),
+    MEET("meet"), //become acquaintances
+    RECRUITED("recruited"), //become part of cult
+    FRIEND("friend"), //become friends
+    LOVER("lover"), //become lovers
+    CHILD("make children"), //make children-->sigma function
+    ARGUE("argue"), //arguing with you
+    KILLED("killed"), //you have been killed
+    FAILEDKILL("failed kill"),
+    FAILEDESCAPE("failed escape");
 
-    private int message;
-    Messages(int m){this.message=m;}
-    public int toInt(){return message;}
-    public String toString(){return ""+message+"";}
+    private String message;
+    Messages(String m){this.message=m;}
+    public String toString(){return message;}
 }
