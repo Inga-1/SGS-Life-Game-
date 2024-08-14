@@ -67,6 +67,14 @@ public class Player{
         //add Exception (try/catch)
     }
 
+    //for naming an heir
+    public Leader makeLeader(){
+        Leader c = new Leader(this.id,board.size,this.game);
+        this.cultMember=c;
+        return (Leader) this.cultMember;
+        //add Exception (try/catch)
+    }
+
     public void kill(Player victim){
         //to implement
     }

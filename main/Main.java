@@ -35,7 +35,7 @@ public class Main {
         //Game game= new Game(10);
         //System.out.println(game.seeActives());
         /*game.startGame();
-        game.gameThread.sleep(5000);
+        game.gameThread.sleep(100000);
         game.gameThread.interrupt();*/
 
         //DOWNCASTING
