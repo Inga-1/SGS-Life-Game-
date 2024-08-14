@@ -74,9 +74,9 @@ public class Player{
     }
     public void MakeChildren(Player player1, Player player2){
         if( player1.ChildrenCounter < getAmountChildren(size) && player2.ChildrenCounter < getAmountChildren(size)){
-            if( size - actives > 0){ //spr czy dostepne dane
+            if( size - size.actives > 0){ //spr czy dostepne dane
                 this.ChildrenCounter++;
-                Player PlayerChild = new Player(actives+1,size,this); //zeby ID sie zgadzalo
+                Player PlayerChild = new Player(size.actives + 1,size,this); //zeby ID sie zgadzalo
                 actives.add(PlayerChild);
                 player1.SetBoardElement(); //dodac indeksy
                 player2.SetBoardElement(); //dodac indeksy
