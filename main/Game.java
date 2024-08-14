@@ -168,6 +168,8 @@ public class Game implements Runnable{
 
                     //they also have already put themselves in our board and us in theirs
                     //we just return them a NONE message
+                    break;
+
                 case RECRUITED:
                     if(!p.isMember){
                        this.cult.addMember(p);
