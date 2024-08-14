@@ -147,17 +147,17 @@ public class Game implements Runnable{
             Messages el=profile.getProfileElement(i);
             int idsender=board.getBoardElement(i).getFirst(); //i know here we get info about sender but its int so not the full tuple???
             Player sender= actives.get(idsender);
-            switch (el){
+            switch (el) {
                 case MEET:
                     //Tuple SenderId = sender.getBoardElement(0);
                     //if(p.board.contains(idsender) == true){
-                        for(int j=0; j < p.board.len; j++){
-                            int idneeded = p.board.board[j].getFirst(); // idk if that's key and if its not better to do just second loop
-                            if(idneeded != idsender){
-                                p.MeetsCounter++;
-                                p.setBoardElement(new Tuple(idsender,p.board.len-1));
-                            }
+                    for (int j = 0; j < p.board.len; j++) {
+                        int idneeded = p.board.board[j].getFirst(); // idk if that's key and if its not better to do just second loop
+                        if (idneeded != idsender) {
+                            p.MeetsCounter++;
+                            p.setBoardElement(new Tuple(idsender, p.board.len - 1));
                         }
+                    }
                     break;
                 case RECRUITED:
                     if( p.isMember != true){ // && stats are ok
@@ -169,11 +169,12 @@ public class Game implements Runnable{
                 case FRIEND:
                     for(int k = 0; k < p.board.len; i++){
                         int idneeded = p.board.board[k].getFirst(); // idk if that's key and if its not better to do just second loop
-                        if(idneeded != idsender){
-                        //losing on stats
-                        }else{p.FriendsCounter++;
-                         // gaining on stats
-                        //if (sender not in space in array for friends){check for null place in friends sector in array==> while loop==> when we find it setBoard to this friend
+                        if (idneeded != idsender) {
+                            //losing on stats
+                        } else {
+                            p.FriendsCounter++;
+                            // gaining on stats
+                            //if (sender not in space in array for friends){check for null place in friends sector in array==> while loop==> when we find it setBoard to this friend
                         }
                     }
                     break;
