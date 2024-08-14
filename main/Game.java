@@ -1,4 +1,5 @@
 package main;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -144,28 +145,48 @@ public class Game implements Runnable{
             //i is position of sender in board(index of profile)
             int senderPosition=i;
             Messages el=profile.getProfileElement(i);
-            int idsender=board.getBoardElement(i).getFirst();
+            int idsender=board.getBoardElement(i).getFirst(); //i know here we get info about sender but its int so not the full tuple???
             Player sender= actives.get(idsender);
             switch (el){
                 case MEET:
-                    //when meeting we add the player to our board (in acquaintances interval) and us in the player's board
-                    //if full notify
+                    //Tuple SenderId = sender.getBoardElement(0);
+                    //if(p.board.contains(idsender) == true){
+                        for(int j=0; j < p.board.len; j++){
+                            int idneeded = p.board.board[j].getFirst(); // idk if that's key and if its not better to do just second loop
+                            if(idneeded != idsender){
+                                p.MeetsCounter++;
+                                p.setBoardElement(new Tuple(idsender,p.board.len-1));
+                            }
+                        }
                     break;
                 case RECRUITED:
-                    //when recruited we add ourselves to the cult
+                    if( p.isMember != true){ // && stats are ok
+                       this.cult.addMember(p);
+                    }else{
+                        if(sender.isMember == true){sender.cultMember.pray();}
+                    }
                     break;
                 case FRIEND:
-                    //when befriending we add the player to our board (in friends interval)and us in the player's board
-                    //if full notify and reject --> negative consequence
+                    for(int k = 0; k < p.board.len; i++){
+                        int idneeded = p.board.board[k].getFirst(); // idk if that's key and if its not better to do just second loop
+                        if(idneeded != idsender){
+                        //losing on stats
+                        }else{p.FriendsCounter++;
+                         // gaining on stats
+                        //if (sender not in space in array for friends){check for null place in friends sector in array==> while loop==> when we find it setBoard to this friend
+                        }
+                    }
                     break;
                 case LOVER:
-                    //when becoming lovers we add the player to our board (in lover place)and us in the player's board
-                    //if full notify and reject --> negative consequence
-                    break;
+                    int rand_int1 = rand.nextInt(1);
+                    if(p.board[2] == null  && rand_int == 1){
+                        p.SetBoardElement(2, SenderId)
+                    }
+                    //if(3rd place of the array not taken){ SetBoard(2=index) to be his lover}
+
+                     break;
                 case CHILD:
-                    //when making children, check sigma function first (max number of children possible)
-                    //if parents in cult, the kids will be members too
-                    //add children to players board (in children interval) and parents in children board (in parents interval)
+                      p.MakeChildren(Player p, Player sender);
                     break;
                 case KILLED:
                     killed(sender,p);
@@ -176,7 +197,7 @@ public class Game implements Runnable{
                         this.cultLeader.kickOut(sender.cultMember);
                     }
                     break;
-                case FAILEDKILL:
+                case FAILEDKILL: // do we need to have it?
                     if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
                         p.kill(sender);
                         attemptsOnLeader++;
@@ -226,6 +247,14 @@ public class Game implements Runnable{
                     //RARE: die of illness(1)
 
 
+                    /*if (p.isMember == true){
+                        p.pray();}
+                    else{
+                        //ZOSTAWIC DO OGARNIECIA RAZEM
+                       //int Random_message = rand.nextInt(10);
+                       //int Random_player_from_board = rand.nextInt(length of aquqitance board);
+                       //sending random message to random member on players board
+                    }*/
                     //random action, according to relationship to random player
                     //make it have a probability to happen otherwise we have too many interactions going on
                     //if the player is a cult member, they could also just pray
