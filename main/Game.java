@@ -74,16 +74,16 @@ public class Game implements Runnable{
                 case MEET:
                     //Tuple SenderId = sender.getBoardElement(0);
                     //if(p.board.contains(idsender) == true){
-                        for(int i = 0; i < ;p.size; i++){
+                        for(int i = 0; i < p.size; i++){
                             String idneeded = p.board[i].getFirst(); 
-                            if(idneeded == idsender){
+                            if(idneeded != idsender){
                                 p.MeetsCounter++;
                         p.SetBoardElement(size-1, SenderId);}}
-                        else{//losing stats}
-                        }
+                        else{}
+                        
                     break;
                 case RECRUITED:
-                    if( p.isMember != true // && stats are ok){
+                    if( p.isMember != true //)){
                        addMember(p)
                     }
                     else{if(sender.isMember == true){sender.pray()}}
