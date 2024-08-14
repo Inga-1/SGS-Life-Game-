@@ -89,21 +89,21 @@ public class Player{
             }
         }
     }
-        //if(ChildrenCounter <  // size of how many children player can have){
-           //if(size - actives > 0){
-           // ChildrenCounter ++;
-           // //Player Id/ child = new Player(all of the stuff)
-           //actives.add(id/child)
-          // id/child get method
-          // player1.SetBoardElement(ChildrenCounter + beggining index of children depending on size of the world, child tuple)
-        // player2.SetBoardElement(ChildrenCounter + beggining index of children depending on size of the world , child tuple)
-        // get metgod fpr player1 tuple
-        // id/child.SetBoardElement(place set by size of the world, tuple of player1)
-        // get method for player2 tuple
-        // id/child.SetBoardElement(place set by the world +1 , tuple of player2)
-           // W SRODKU  if(Player1 isMember == true || Player2 isMember == true){ SETNAC MU ZE JEST W CULT
-    //}
-           //}
+        
+    //public int BeginningChildrenInterval(){
+       // return 3;
+   // }
+  //  public int EndChildrenInterval(){
+       // return getAmountChildren()+2;
+   // }
+
+
+
+
+
+
+
+    
     public SimpleMember makeMember(){
         SimpleMember c = new SimpleMember(this.id,board.size,this.game);
         this.cultMember=c;
