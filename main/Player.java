@@ -72,7 +72,15 @@ public class Player{
         return i;
         //add Exception (try/catch)
     }
-    public void MakeChildren(Player player1, Player player2){}
+    public void MakeChildren(){
+        if( this.ChildrenCounter < getAmountChildren(size)){
+            if( size - actives > 0){
+                this.ChildrenCounter++;
+                
+                
+            }
+        }
+    }
         //if(ChildrenCounter <  // size of how many children player can have){
            //if(size - actives > 0){
            // ChildrenCounter ++;
