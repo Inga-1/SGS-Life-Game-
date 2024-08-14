@@ -2,7 +2,7 @@ package main;
 
 import main.Board;
 
-public class Player extends Game{
+public class Player{
     protected int MeetsCounter;
     protected int FriendsCounter;
     protected int ChildrenCounter;
