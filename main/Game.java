@@ -267,8 +267,8 @@ public class Game implements Runnable{
                     } else if (j<7) {
                         if(p.stats.getAge()>19) {
                             if (!p.isInFriends(idreceiver)
-                                    && p.MeetsCounter<=this.size.getAmountFriends()
-                                    && receiver.MeetsCounter<=this.size.getAmountFriends()
+                                    && p.FriendsCounter<=this.size.getAmountFriends()
+                                    && receiver.FriendsCounter<=this.size.getAmountFriends()
                                     && p.isInAcq(idreceiver)) {
                                 //send friend message
                             } else {
@@ -276,7 +276,15 @@ public class Game implements Runnable{
                             }
                         }
                     } else if(j<9){
-                        if(p.stats.getAge()>19){}
+                        if(p.stats.getAge()>19){
+                            if(p.board.board[2].getFirst()==null && p.board.board[2].getSecond()==null){
+                                //send LOVER message-->you dont have a lover and ask them to be it
+                            }else if(p.ChildrenCounter<this.size.getAmountChildren()){
+                                //send CHILD message-->you have a lover and want to make children with them
+                            }else {
+                                //one of the default actions
+                            }
+                        }
                         //lover
                     } else if (j<11) {
                         if(p.stats.getAge()>19){}
@@ -284,24 +292,34 @@ public class Game implements Runnable{
                     } else if (j<15) {
                         if(p.isMember){
                             p.cultMember.pray();
+                        }else{
+                            //other default action
                         }
                     } else if (j<19) {
                         if(p.isMember && p.stats.getWillpower()>=1){
                             p.cultMember.question();
+                        }else{
+                            //other default action
                         }
                     } else if (j<24) {
-                        if(p.isMember && p.stats.getAge()>19){}
-                        //recruit
-                        //just sends recruit message
+                        if(p.isMember && p.stats.getAge()>19){
+                            //recruit
+                            //just sends recruit message
+                        }else{
+
+                        }
                     } else {
                         if(p.stats.getAge()>19){}
                         //dies
-                        //maybe we could do two methods, suicide and death for illness, that do the exact same thing
+                        //maybe we could a method with two options, suicide
+                        //(only if you have a certain willpower and a low enough faith)
+                        //and death for illness, that do the exact same thing
                         //(which is probably similar to killed method), but one updates suicides and the other deaths;
 
                         //also suicide might be only if willpower is 4 or 5
                     }
 
+                    //PROBABILITIES
                     //meet(4),friend(3),find lover(2),argue(3)
                     //if member: pray,question(4)(4),recruit(3)
                     //RARE: die of illness(1)
