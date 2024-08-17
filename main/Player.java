@@ -75,6 +75,7 @@ public class Player{
         return i;
         //add Exception (try/catch)
     }
+
     public void MakeChildren(Player player1, Player player2){}
         //if(ChildrenCounter <  // size of how many children player can have){
            //if(size - actives > 0){
@@ -91,6 +92,26 @@ public class Player{
            // W SRODKU  if(Player1 isMember == true || Player2 isMember == true){ SETNAC MU ZE JEST W CULT
     //}
            //}
+
+
+    /*public void MakeChildren(Player player1, Player player2){
+        if( player1.ChildrenCounter < getAmountChildren(size) && player2.ChildrenCounter < getAmountChildren(size)){
+            if( size - size.actives > 0){ //spr czy dostepne dane
+                this.ChildrenCounter++;
+                Player PlayerChild = new Player(size.actives + 1,size,this); //zeby ID sie zgadzalo
+                actives.add(PlayerChild);
+                player1.SetBoardElement(3+ player1.ChildrenCounter, newTuple(PlayerChild.id ,3+ player1.ChildrenCounter)); //dodac indeksy
+                player2.SetBoardElement(3+ player2.ChildrenCounter, newTuple(PlayerChild.id ,3+ player2.ChildrenCounter)); //dodac indeksy
+                PlayerChild.SetBoardElement(); //dodac indeksy
+                PlayerChild.SetBoardElement(); //dodac indeksy
+                if(player1.isMember() == true || player2.isMember() == true){
+                    addMember(p);
+                    
+                }
+            }
+        }
+    }
+    */
 
     public SimpleMember makeMember(){
         SimpleMember c = new SimpleMember(this.id,board.size,this.game);
