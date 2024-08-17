@@ -11,10 +11,12 @@ public abstract class CultMember extends Player{
         this.cultMember=this;
     }
     public void pray(){
-        //changes faith stats
+        int f=this.stats.getFaith();
+        this.stats.setFaith(f+1);
     }
     public void question(){
-        //lowers faith
+        int f=this.stats.getFaith();
+        this.stats.setFaith(f-1);
     }
     public void changeRole(Role r){
         role=r;

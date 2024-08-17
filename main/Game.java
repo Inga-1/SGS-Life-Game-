@@ -267,8 +267,8 @@ public class Game implements Runnable{
                     } else if (j<7) {
                         if(p.stats.getAge()>19) {
                             if (!p.isInFriends(idreceiver)
-                                    && p.MeetsCounter<=this.size.getAmountFriends()
-                                    && receiver.MeetsCounter<=this.size.getAmountFriends()
+                                    && p.FriendsCounter<=this.size.getAmountFriends()
+                                    && receiver.FriendsCounter<=this.size.getAmountFriends()
                                     && p.isInAcq(idreceiver)) {
                                 //send friend message
                             } else {
@@ -276,7 +276,15 @@ public class Game implements Runnable{
                             }
                         }
                     } else if(j<9){
-                        if(p.stats.getAge()>19){}
+                        if(p.stats.getAge()>19){
+                            if(p.board.board[2].getFirst()==null && p.board.board[2].getSecond()==null){
+                                //send LOVER message-->you dont have a lover and ask them to be it
+                            }else if(p.ChildrenCounter<this.size.getAmountChildren()){
+                                //send CHILD message-->you have a lover and want to make children with them
+                            }else {
+                                //one of the default actions
+                            }
+                        }
                         //lover
                     } else if (j<11) {
                         if(p.stats.getAge()>19){}
@@ -284,24 +292,40 @@ public class Game implements Runnable{
                     } else if (j<15) {
                         if(p.isMember){
                             p.cultMember.pray();
+                        }else{
+                            //other default action
                         }
                     } else if (j<19) {
                         if(p.isMember && p.stats.getWillpower()>=1){
                             p.cultMember.question();
+                        }else{
+                            //other default action
                         }
                     } else if (j<24) {
-                        if(p.isMember && p.stats.getAge()>19){}
-                        //recruit
-                        //just sends recruit message
+                        if(p.isMember && p.stats.getAge()>19){
+                            //recruit
+                            //just sends recruit message
+                        }else{
+
+                        }
                     } else {
-                        if(p.stats.getAge()>19){}
+                        if(p.stats.getAge()>19){
+                            boolean isSuicide=false;
+                            if(p.stats.getWillpower()>2 && p.stats.getFaith()<5){
+                                isSuicide=true;
+                            }
+                            die(p,isSuicide);
+                        }
                         //dies
-                        //maybe we could do two methods, suicide and death for illness, that do the exact same thing
+                        //maybe we could a method with two options, suicide
+                        //(only if you have a certain willpower and a low enough faith)
+                        //and death for illness, that do the exact same thing
                         //(which is probably similar to killed method), but one updates suicides and the other deaths;
 
                         //also suicide might be only if willpower is 4 or 5
                     }
 
+                    //PROBABILITIES
                     //meet(4),friend(3),find lover(2),argue(3)
                     //if member: pray,question(4)(4),recruit(3)
                     //RARE: die of illness(1)
@@ -329,18 +353,62 @@ public class Game implements Runnable{
         }
 
     }
+
+    
     public String seeActives(){
         return actives.toString();
     }
+
+//-----------METHODS FOR DYING----------------------------------------------------------------------------------------------
     public void killed(Player killer,Player victim){
         victim.status=0;//not active anymore
         if(victim.isMember){
             int i=victim.getCultIndex();
             this.cult.cult.remove(i);
         }
+        clearRelationships(victim);
         actives.remove(victim.id);
         System.out.println(victim.id+" has been killed by "+killer.id);
     }
+
+    public void die(Player p, boolean isSuicide) {
+        p.status = 0;
+
+        if (p.isMember) {
+            int cultIndex = p.getCultIndex();
+            if (cultIndex >= 0 && cultIndex < this.cult.cult.size()) {
+                this.cult.cult.remove(cultIndex);
+            }
+        }
+
+        clearRelationships(p);
+        actives.remove(p);
+        if (isSuicide) {
+            suicides++;
+            System.out.println(p.id + " has committed suicide.");
+        } else {
+            deaths++;
+            System.out.println(p.id + " has died of natural causes or illness.");
+        }
+    }
+
+    private void clearRelationships(Player p) {
+        for (int i = 0; i < p.board.board.length; i++) {
+            Tuple<Integer, Integer> relationship = p.board.board[i];
+            if (relationship != null) {
+                int friendId = relationship.getFirst();
+                int indexInFriendBoard = relationship.getSecond();
+                Player friend = actives.get(friendId);
+                if (friend != null) {
+                    friend.board.board[indexInFriendBoard] = null;
+                    friend.decreaseConsts(indexInFriendBoard);
+                }
+            }
+            p.board.board[i] = null;
+            p.decreaseConsts(i);
+        }
+    }
+
 
 
     //------------------------------------EVENTS-----------------------------------------------------------------------------------------------------------------------------
