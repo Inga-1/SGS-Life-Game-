@@ -7,6 +7,7 @@ public class Leader extends CultMember{
         this.role=Role.LEADER;
         this.stats.setCharisma(4);
         this.stats.setWillpower(4);
+        this.isLeader=true;
     }
     //diff stats compared to others
 

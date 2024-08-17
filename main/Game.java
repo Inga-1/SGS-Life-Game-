@@ -1,17 +1,15 @@
 package main;
-import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 
 public class Game implements Runnable{
-    ArrayList<Player> actives;
+    Player[] actives;
     private int maxsize; //from input
     Size size;
     private int activesSize;
     private int possibleChildren;
-    private Leader cultLeader;
+    protected Leader cultLeader;
     protected Cult cult;
     public Game(Size size){ //make it get from input
         this.size=size;
@@ -19,16 +17,16 @@ public class Game implements Runnable{
         this.activesSize=size.actives;
         this.possibleChildren=size.possibleChildren;
 
-        actives= new ArrayList<Player>();
+        actives= new Player[this.activesSize];
         this.cult=new Cult();
         Leader leader=new Leader(0,size,this);
         this.cult.setLeader(leader);
         this.cultLeader=leader;
-        actives.add(leader);
+        actives[0]=leader;
 
         for(int i=1;i<size.actives;i++){
             Player p=new Player(i,size,this);
-            actives.add(p);
+            actives[i]=p;
         }
         //array of all players
         //size means number of players
@@ -156,18 +154,10 @@ public class Game implements Runnable{
                 yourIndex=board.getBoardElement(i).getSecond();
             }
             //i know here we get info about sender but its int so not the full tuple???
-            Player sender= actives.get(idsender);
+            Player sender= actives[idsender];
             switch (el) {
                 case MEET:
-
-                    //THIS IS ALL GONNA GO IN DEFAULT
-                    //we do the checks when someone wants to meet us
-                    //who receives the message is a stranger and the sender is also a stranger to the receiver
-                    //and we also check if they both have space
-                    //we just need to add to board
-
-                    //they also have already put themselves in our board and us in theirs
-                    //we just return them a NONE message
+                    sendMessage(p,sender,Messages.NONE);
                     break;
 
                 case RECRUITED:
@@ -195,7 +185,8 @@ public class Game implements Runnable{
                         sender.board.board[yourIndex]=null;
                         p.decreaseConsts(yourIndex);
                     }else{
-                        //send them NONE message
+                        //sender becomes receiver
+                        sendMessage(p,sender,Messages.NONE);
                     }
 
                     break;
@@ -212,7 +203,7 @@ public class Game implements Runnable{
                         p.decreaseConsts(yourIndex);
                         //remove lover from previous position in array and you from theirs
                     }else{
-                        //send NONE message
+                        sendMessage(p,sender,Messages.NONE);
                     }
                     //if(3rd place of the array not taken){ SetBoard(2=index) to be his lover}
 
@@ -242,88 +233,8 @@ public class Game implements Runnable{
                     break;
                 default:
                     //When we are SENDING messages, NOT RECEIVING
+                    defaultMethod(p);
 
-                    Random random = new Random();
-                    int j=random.nextInt(25);
-                    int idreceiver=random.nextInt(activesSize);
-                    Player receiver= actives.get(idreceiver);
-
-                    if (j<4){
-                        //meet
-                        if(!p.isInBoard(idreceiver) && p.MeetsCounter<=this.size.getAmountAcq() && receiver.MeetsCounter<=this.size.getAmountAcq()){
-                            //in BOARD
-                            int newPositionP=p.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
-                            int newPositionR=receiver.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
-                            p.board.setBoardElement(newPositionP, new Tuple(idreceiver, newPositionR));
-                            p.MeetsCounter++;
-                            sender.board.setBoardElement(newPositionR, new Tuple(idreceiver, newPositionP));
-                            sender.MeetsCounter++;
-
-                            //in PROFILE(messages)
-                            //send meet message
-                        }else{
-                            //one of the default actions
-                        }
-                    } else if (j<7) {
-                        if(p.stats.getAge()>19) {
-                            if (!p.isInFriends(idreceiver)
-                                    && p.FriendsCounter<=this.size.getAmountFriends()
-                                    && receiver.FriendsCounter<=this.size.getAmountFriends()
-                                    && p.isInAcq(idreceiver)) {
-                                //send friend message
-                            } else {
-                                //one of the default actions
-                            }
-                        }
-                    } else if(j<9){
-                        if(p.stats.getAge()>19){
-                            if(p.board.board[2].getFirst()==null && p.board.board[2].getSecond()==null){
-                                //send LOVER message-->you dont have a lover and ask them to be it
-                            }else if(p.ChildrenCounter<this.size.getAmountChildren()){
-                                //send CHILD message-->you have a lover and want to make children with them
-                            }else {
-                                //one of the default actions
-                            }
-                        }
-                        //lover
-                    } else if (j<11) {
-                        if(p.stats.getAge()>19){}
-                        //argue
-                    } else if (j<15) {
-                        if(p.isMember){
-                            p.cultMember.pray();
-                        }else{
-                            //other default action
-                        }
-                    } else if (j<19) {
-                        if(p.isMember && p.stats.getWillpower()>=1){
-                            p.cultMember.question();
-                        }else{
-                            //other default action
-                        }
-                    } else if (j<24) {
-                        if(p.isMember && p.stats.getAge()>19){
-                            //recruit
-                            //just sends recruit message
-                        }else{
-
-                        }
-                    } else {
-                        if(p.stats.getAge()>19){
-                            boolean isSuicide=false;
-                            if(p.stats.getWillpower()>2 && p.stats.getFaith()<5){
-                                isSuicide=true;
-                            }
-                            die(p,isSuicide);
-                        }
-                        //dies
-                        //maybe we could a method with two options, suicide
-                        //(only if you have a certain willpower and a low enough faith)
-                        //and death for illness, that do the exact same thing
-                        //(which is probably similar to killed method), but one updates suicides and the other deaths;
-
-                        //also suicide might be only if willpower is 4 or 5
-                    }
 
                     //PROBABILITIES
                     //meet(4),friend(3),find lover(2),argue(3)
@@ -354,9 +265,133 @@ public class Game implements Runnable{
 
     }
 
+    //----------------------DEFAULT---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    public void defaultMethod(Player p){
+        Random random = new Random();
+        int j=random.nextInt(25);
+        int idreceiver=random.nextInt(activesSize);
+        Player receiver= actives[idreceiver];
+
+        if (j<4){
+            //meet
+            if(!p.isInBoard(idreceiver) && p.MeetsCounter<=this.size.getAmountAcq() && receiver.MeetsCounter<=this.size.getAmountAcq()){
+                //in BOARD
+                int newPositionP=p.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
+                int newPositionR=receiver.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
+                p.board.setBoardElement(newPositionP, new Tuple(idreceiver, newPositionR));
+                p.MeetsCounter++;
+                receiver.board.setBoardElement(newPositionR, new Tuple(idreceiver, newPositionP));
+                receiver.MeetsCounter++;
+
+                //in PROFILE(messages)
+                //send meet message
+                sendMessage(p,receiver,Messages.MEET);
+
+            }else{
+                //one of the default actions
+                defaultMethod(p);
+            }
+        } else if (j<7) {
+            if(p.stats.getAge()>19) {
+                if (!p.isInFriends(idreceiver)
+                        && p.FriendsCounter<=this.size.getAmountFriends()
+                        && receiver.FriendsCounter<=this.size.getAmountFriends()
+                        && p.isInAcq(idreceiver)) {
+                    //send friend message
+                    sendMessage(p,receiver,Messages.FRIEND);
+                } else {
+                    //one of the default actions
+                    defaultMethod(p);
+                }
+            }
+        } else if(j<9){
+            if(p.stats.getAge()>19 && p.isInBoard(idreceiver)){
+                if(p.board.board[2].getFirst()==null && p.board.board[2].getSecond()==null){
+                    //send LOVER message-->you dont have a lover and ask them to be it
+                    sendMessage(p,receiver,Messages.LOVER);
+                }else if(p.ChildrenCounter<this.size.getAmountChildren()){
+                    //send CHILD message-->you have a lover and want to make children with them
+                    sendMessage(p,receiver,Messages.CHILD);
+                }else {
+                    //one of the default actions
+                    defaultMethod(p);
+                }
+            }
+            //lover
+        } else if (j<11) {
+            if(p.stats.getAge()>19){
+                sendMessage(p,receiver,Messages.ARGUE);
+            }
+            //argue
+        } else if (j<15) {
+            if(p.isMember){
+                p.cultMember.pray();
+            }else{
+                //other default action
+                defaultMethod(p);
+            }
+        } else if (j<19) {
+            if(p.isMember && p.stats.getWillpower()>=1){
+                p.cultMember.question();
+            }else{
+                //other default action
+                defaultMethod(p);
+            }
+        } else if (j<24) {
+            if(p.isMember && p.stats.getAge()>19 && !receiver.isMember){
+                Random r = new Random();
+                int pThrow=r.nextInt(30);
+                int rThrow=r.nextInt(30);
+                pThrow+=p.stats.getCharisma();
+                rThrow+=receiver.stats.getWillpower();
+                if(pThrow>=rThrow){
+                    sendMessage(p,receiver,Messages.RECRUITED);
+                }else{
+                    p.cultMember.pray();
+                }
+            }else{
+                //other default action
+                defaultMethod(p);
+            }
+        } else {
+            if(p.stats.getAge()>19){
+                boolean isSuicide=false;
+                if(p.stats.getWillpower()>2 && p.stats.getFaith()<5){
+                    isSuicide=true;
+                }
+                if(p.isLeader){updateLeaderPosition();}
+                die(p,isSuicide);
+            }
+            //dies
+            //maybe we could a method with two options, suicide
+            //(only if you have a certain willpower and a low enough faith)
+            //and death for illness, that do the exact same thing
+            //(which is probably similar to killed method), but one updates suicides and the other deaths;
+
+            //also suicide might be only if willpower is 4 or 5
+        }
+    }
+
+
+    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     
     public String seeActives(){
         return actives.toString();
+    }
+
+    public int findEmptySpotInActives(){
+        for(int i=0;i<actives.length;i++){
+            if(actives[i]==null){return i;}
+        }
+        return -1;
+    }
+
+    public void sendMessage(Player sender, Player receiver, Messages message){
+        int receiverindex=sender.indexInBoard(receiver.id);
+        int senderindex=sender.board.getBoardElement(receiverindex).getSecond();
+        receiver.profile.setProfileElement(senderindex,message);
     }
 
 //-----------METHODS FOR DYING----------------------------------------------------------------------------------------------
@@ -367,7 +402,7 @@ public class Game implements Runnable{
             this.cult.cult.remove(i);
         }
         clearRelationships(victim);
-        actives.remove(victim.id);
+        actives[victim.id]=null;
         System.out.println(victim.id+" has been killed by "+killer.id);
     }
 
@@ -382,7 +417,7 @@ public class Game implements Runnable{
         }
 
         clearRelationships(p);
-        actives.remove(p);
+        actives[p.id]=null;
         if (isSuicide) {
             suicides++;
             System.out.println(p.id + " has committed suicide.");
@@ -395,10 +430,10 @@ public class Game implements Runnable{
     private void clearRelationships(Player p) {
         for (int i = 0; i < p.board.board.length; i++) {
             Tuple<Integer, Integer> relationship = p.board.board[i];
-            if (relationship != null) {
+            if (relationship != new Tuple (null,null)) {
                 int friendId = relationship.getFirst();
                 int indexInFriendBoard = relationship.getSecond();
-                Player friend = actives.get(friendId);
+                Player friend = actives[friendId];
                 if (friend != null) {
                     friend.board.board[indexInFriendBoard] = null;
                     friend.decreaseConsts(indexInFriendBoard);
@@ -409,7 +444,15 @@ public class Game implements Runnable{
         }
     }
 
-
+    public void updateLeaderPosition(){
+        Tuple<Integer, Integer> heirTup=this.cultLeader.board.board[this.size.BeginningChildrenInterval()];
+        if(heirTup.getFirst()!=null && heirTup.getSecond()!=null) {
+            Player heir = actives[heirTup.getFirst()];
+            heir.makeLeader();
+        }else{
+            //idk
+        }
+    }
 
     //------------------------------------EVENTS-----------------------------------------------------------------------------------------------------------------------------
     public void checkEvents(){

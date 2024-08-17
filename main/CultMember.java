@@ -9,6 +9,7 @@ public abstract class CultMember extends Player{
         super(id,size,game);
         this.role=Role.NONE;
         this.cultMember=this;
+        this.isMember=true;
     }
     public void pray(){
         int f=this.stats.getFaith();

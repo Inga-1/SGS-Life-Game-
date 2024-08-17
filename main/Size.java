@@ -31,8 +31,11 @@ public enum Size {
         }
     }
 
+    //index 0 is the player itself
+    //index 1 is the lover
+
     public int BeginningChildrenInterval(){
-        return 3;
+        return 2;
     }
     public int EndChildrenInterval(){
         return getAmountChildren()+2;

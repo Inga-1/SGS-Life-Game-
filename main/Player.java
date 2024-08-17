@@ -10,6 +10,8 @@ public class Player{
 
     protected int id;
     protected boolean isMember;
+    protected boolean isLeader;
+
     protected CultMember cultMember;
     protected Cult cult;
 
@@ -43,6 +45,7 @@ public class Player{
         this.gender=data.gender;
 
         isMember=false;
+        isLeader=false;
         this.cultMember=null;
 
         board=new Board(id,size);
@@ -88,6 +91,7 @@ public class Player{
            // W SRODKU  if(Player1 isMember == true || Player2 isMember == true){ SETNAC MU ZE JEST W CULT
     //}
            //}
+
     public SimpleMember makeMember(){
         SimpleMember c = new SimpleMember(this.id,board.size,this.game);
         this.cultMember=c;
@@ -96,21 +100,15 @@ public class Player{
     }
 
     //for naming an heir
-    public Leader makeLeader(){
+    public void makeLeader(){
         Leader c = new Leader(this.id,board.size,this.game);
         this.cultMember=c;
-        return (Leader) this.cultMember;
-        //add Exception (try/catch)
+        this.game.cultLeader=c;
+        this.game.cult.setLeader(c);
     }
 
     public void kill(Player killer,Player victim){
-        victim.status=0;
-        if(victim.isMember){
-            int i=victim.getCultIndex();
-            this.cult.cult.remove(i);
-        }
-        this.game.actives.remove(victim.id);
-        System.out.println(victim.name+" has been killed by "+killer.name);
+        //send kill message
     }
 
     public boolean isInBoard(int idperson){
@@ -121,6 +119,15 @@ public class Player{
             }
         }
         return false;
+    }
+    public int indexInBoard(int idperson){
+        for (int j = 0; j < this.board.len; j++) {
+            int idneeded = this.board.board[j].getFirst();
+            if (idneeded == idperson) {
+                return j;
+            }
+        }
+        return -1;
     }
     public boolean isInFriends(int idperson){
         int beginning=this.game.size.BeginningFriendsInterval();
