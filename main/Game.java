@@ -309,7 +309,13 @@ public class Game implements Runnable{
 
                         }
                     } else {
-                        if(p.stats.getAge()>19){}
+                        if(p.stats.getAge()>19){
+                            boolean isSuicide=false;
+                            if(p.stats.getWillpower()>2 && p.stats.getFaith()<5){
+                                isSuicide=true;
+                            }
+                            die(p,isSuicide);
+                        }
                         //dies
                         //maybe we could a method with two options, suicide
                         //(only if you have a certain willpower and a low enough faith)
@@ -347,11 +353,13 @@ public class Game implements Runnable{
         }
 
     }
+
+    
     public String seeActives(){
         return actives.toString();
     }
 
-
+//-----------METHODS FOR DYING----------------------------------------------------------------------------------------------
     public void killed(Player killer,Player victim){
         victim.status=0;//not active anymore
         if(victim.isMember){
