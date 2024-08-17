@@ -350,15 +350,57 @@ public class Game implements Runnable{
     public String seeActives(){
         return actives.toString();
     }
+
+
     public void killed(Player killer,Player victim){
         victim.status=0;//not active anymore
         if(victim.isMember){
             int i=victim.getCultIndex();
             this.cult.cult.remove(i);
         }
+        clearRelationships(victim);
         actives.remove(victim.id);
         System.out.println(victim.id+" has been killed by "+killer.id);
     }
+
+    public void die(Player p, boolean isSuicide) {
+        p.status = 0;
+
+        if (p.isMember) {
+            int cultIndex = p.getCultIndex();
+            if (cultIndex >= 0 && cultIndex < this.cult.cult.size()) {
+                this.cult.cult.remove(cultIndex);
+            }
+        }
+
+        clearRelationships(p);
+        actives.remove(p);
+        if (isSuicide) {
+            suicides++;
+            System.out.println(p.id + " has committed suicide.");
+        } else {
+            deaths++;
+            System.out.println(p.id + " has died of natural causes or illness.");
+        }
+    }
+
+    private void clearRelationships(Player p) {
+        for (int i = 0; i < p.board.board.length; i++) {
+            Tuple<Integer, Integer> relationship = p.board.board[i];
+            if (relationship != null) {
+                int friendId = relationship.getFirst();
+                int indexInFriendBoard = relationship.getSecond();
+                Player friend = actives.get(friendId);
+                if (friend != null) {
+                    friend.board.board[indexInFriendBoard] = null;
+                    friend.decreaseConsts(indexInFriendBoard);
+                }
+            }
+            p.board.board[i] = null;
+            p.decreaseConsts(i);
+        }
+    }
+
 
 
     //------------------------------------EVENTS-----------------------------------------------------------------------------------------------------------------------------
