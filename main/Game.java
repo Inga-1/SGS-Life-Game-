@@ -7,7 +7,7 @@ public class Game implements Runnable{
     Player[] actives;
     private int maxsize; //from input
     Size size;
-    private int activesSize;
+    protected int activesSize;
     private int possibleChildren;
     protected Leader cultLeader;
     protected Cult cult;
@@ -17,14 +17,14 @@ public class Game implements Runnable{
         this.activesSize=size.actives;
         this.possibleChildren=size.possibleChildren;
 
-        actives= new Player[this.activesSize];
+        actives= new Player[this.maxsize];
         this.cult=new Cult();
         Leader leader=new Leader(0,size,this);
         this.cult.setLeader(leader);
         this.cultLeader=leader;
         actives[0]=leader;
 
-        for(int i=1;i<size.actives;i++){
+        for(int i=1;i<this.activesSize;i++){
             Player p=new Player(i,size,this);
             actives[i]=p;
         }
@@ -61,8 +61,6 @@ public class Game implements Runnable{
     public void run() {
         try {
             while(gameThread!=null){
-                System.out.println("It's still going...");
-
                 //check for EVENTS and executes them
                 checkEvents();
 
@@ -90,7 +88,8 @@ public class Game implements Runnable{
                     int age=p.stats.getAge();
                     p.stats.setAge(age+1);
                     if(age>49){
-                        //die (same method used for the deaths in default)
+                        die(p,false);
+                        deaths++;
                     }
 
                     if(p.status==1){update(p);}
@@ -110,12 +109,14 @@ public class Game implements Runnable{
                 System.out.println(+membersKickedOut+" members were kicked out.\n");
 
                 Thread.sleep(500);
+                //pause
                 //CONTINUE?
                 Scanner myObj = new Scanner(System.in);
                 System.out.println("Do you want to continue with the story? Press 1 to continue or 2 to quit:");
                 int o=Integer.parseInt(myObj.nextLine());
                 switch(o) {
                     case 1:
+                        //continue
                         break;
                     case 2:
                         terminateGame();
@@ -150,8 +151,10 @@ public class Game implements Runnable{
                 idsender=board.getBoardElement(i).getFirst();
             }
             int yourIndex=0;
+            Tuple<Integer,Integer> tup = null;
             if (board.getBoardElement(i).getSecond()!=null){
                 yourIndex=board.getBoardElement(i).getSecond();
+                tup=board.getBoardElement(i);
             }
             //i know here we get info about sender but its int so not the full tuple???
             Player sender= actives[idsender];
@@ -161,8 +164,11 @@ public class Game implements Runnable{
                     break;
 
                 case RECRUITED:
+                    //double check this because might have happend already before in the loop (from someone else)
                     if(!p.isMember){
-                       this.cult.addMember(p);
+                       this.cult.addMember(p.makeMember());
+                       sendMessage(p,this.cultLeader,Messages.MEET);
+                       newMembers++;
                     }else{
                         sender.cultMember.pray();
                         //to even send the recruit message you have to be a member first, so no need to check
@@ -172,6 +178,9 @@ public class Game implements Runnable{
 
                     //same for this as in meet
                     //we check when we do the action, not the reaction
+
+                    //double check this because might have happend already before in the loop (from someone else)
+                    //and exceeded limits
                     if(p.FriendsCounter<=this.size.getAmountFriends() && sender.FriendsCounter<=this.size.getAmountFriends()){
                         int newPositionP=p.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
                         int newPositionS=sender.findEmptySpotInBoard(this.size.BeginningFriendsInterval(),this.size.EndFriendsInterval());
@@ -191,6 +200,8 @@ public class Game implements Runnable{
 
                     break;
                 case LOVER:
+                    //double check this because might have happend already before in the loop (from someone else)
+                    //and exceeded limits
                     Random rand = new Random();
                     int rand_int1 = rand.nextInt(2);
                     if(p.board.board[2].getFirst()==null  && p.board.board[2].getSecond()==null && rand_int1 == 1){
@@ -209,26 +220,65 @@ public class Game implements Runnable{
 
                      break;
                 case CHILD:
-                      p.MakeChildren(p, sender);
+                    //no need for double check because we check lover just once in loop (and there is only one lover and always the same)
+                    p.MakeChildren(sender);
                     break;
                 case KILLED:
+                    if(p.isLeader){updateLeaderPosition();}
                     killed(sender,p);
+                    murdered++;
                     break;
                 case ARGUE:
                     //if someone argues with leader they get kicked out
                     if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
                         this.cultLeader.kickOut(sender.cultMember);
+                        membersKickedOut++;
                     }
+
+                    Random randArgue = new Random();
+                    int senderThrow=randArgue.nextInt(25);
+                    int pThrow=randArgue.nextInt(25);
+                    senderThrow+=sender.stats.getCharisma()+sender.stats.getWillpower();
+                    pThrow+=p.stats.getCharisma()+p.stats.getWillpower();
+
+                    //who "loses" puts the other in enemies, if its already enemy tries to kill
+                    if(senderThrow>pThrow){
+                        if (p.EnemiesCounter<this.size.getAmountEnemies() && !p.isInEnemies(sender.id)){
+                            int newEnemyPosition=p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(),this.size.EndEnemiesInterval());
+                            p.board.setBoardElement(newEnemyPosition,tup);
+                        }else if(p.isInEnemies(sender.id)){
+                            p.kill(sender);
+                        }else{
+                            sendMessage(p,sender,Messages.NONE);
+                        }
+                    }else{
+                        if (sender.EnemiesCounter<this.size.getAmountEnemies() && !sender.isInEnemies(p.id)){
+                            int newEnemyPosition=sender.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(),this.size.EndEnemiesInterval());
+                            sender.board.setBoardElement(newEnemyPosition,p.board.getBoardElement(yourIndex));
+                        }else if(sender.isInEnemies(p.id)){
+                            sender.kill(p);
+                        }else{
+                            sendMessage(sender,p,Messages.NONE);
+                        }
+                    }
+
                     break;
-                case FAILEDKILL: // do we need to have it?
+                case FAILEDKILL:
                     if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
-                        p.kill(p,sender);
+                        sendMessage(p,sender,Messages.KILLED);
+                        murdered++;
                         attemptsOnLeader++;
+                    }else{
+                        //if someone tries to kill you,it becomes your enemy
+                        int newEnemyPosition=p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(),this.size.EndEnemiesInterval());
+                        p.board.setBoardElement(newEnemyPosition,tup);
                     }
                     break;
                 case FAILEDESCAPE:
                     if(sender.isMember && p.isMember && p.cultMember.role== CultMember.Role.LEADER){
                         //idk, maybe put in enemies of leader
+                        int newDefectorPosition=p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(),this.size.EndEnemiesInterval());
+                        p.board.setBoardElement(newDefectorPosition,tup);
                     }
                     break;
                 default:
@@ -310,7 +360,7 @@ public class Game implements Runnable{
                 if(p.board.board[2].getFirst()==null && p.board.board[2].getSecond()==null){
                     //send LOVER message-->you dont have a lover and ask them to be it
                     sendMessage(p,receiver,Messages.LOVER);
-                }else if(p.ChildrenCounter<this.size.getAmountChildren()){
+                }else if(p.ChildrenCounter<this.size.getAmountChildren() && receiver.ChildrenCounter<this.size.getAmountChildren()){
                     //send CHILD message-->you have a lover and want to make children with them
                     sendMessage(p,receiver,Messages.CHILD);
                 }else {
@@ -403,6 +453,7 @@ public class Game implements Runnable{
         }
         clearRelationships(victim);
         actives[victim.id]=null;
+        this.activesSize--;
         System.out.println(victim.id+" has been killed by "+killer.id);
     }
 
@@ -418,6 +469,7 @@ public class Game implements Runnable{
 
         clearRelationships(p);
         actives[p.id]=null;
+        this.activesSize--;
         if (isSuicide) {
             suicides++;
             System.out.println(p.id + " has committed suicide.");
@@ -450,7 +502,7 @@ public class Game implements Runnable{
             Player heir = actives[heirTup.getFirst()];
             heir.makeLeader();
         }else{
-            //idk
+            civilWar(); //CIVIL WAR EVENT
         }
     }
 
@@ -476,6 +528,11 @@ public class Game implements Runnable{
 
     public void rebellion(){
         System.out.println("There was always some tension in the cult, most members weren’t 100% convinced by "+this.cultLeader.name+" "+this.cultLeader.surname+", but still they stuck around to see where this was going. \n"+this.cultLeader.name+" thought his charisma would be enough to pull it off, however he didn’t expect that his members would start questioning them and turn against them. \nAnd as quickly as it started it quickly vanished.");
+        terminateGame();
+    }
+
+    public void civilWar(){
+        System.out.println("For a moment "+this.cultLeader.name+" "+this.cultLeader.surname+"+ had it all, the big following they had always wanted.\nBut as all things nothing last forever.\nAfter their death, since they were childless, the leader position was left empty and up for grabs.\n"+this.cultLeader.name+" would have never imagined that their right-hand man and closest friend would betray his memory.\n His \"friend\" tried to take over the cult claiming "+this.cultLeader.name+" had named him heir, but not everyone was happy though. \nSome members said their god "+this.cult.god+" spoke to them saying they were the rightful heirs to the cult. \nMany leaders followed, each one murdered after a short period. \nThe media called it the \"deadly leaderless cult\", more than half of its members died trying to take over the cult and after many deaths the police intervened saving the few survivors");
         terminateGame();
     }
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

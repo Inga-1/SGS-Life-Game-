@@ -2,6 +2,8 @@ package main;
 
 import main.Board;
 
+import java.util.Random;
+
 public class Player{
     protected int MeetsCounter;
     protected int FriendsCounter;
@@ -16,6 +18,7 @@ public class Player{
     protected Cult cult;
 
     protected Game game;
+    protected Size size;
     protected Stats stats;
     protected String name;
     protected String surname;
@@ -33,6 +36,7 @@ public class Player{
 
         this.id=id;
         this.game=game;
+        this.size=size;
 
         status=1;
         Stats stats=new Stats();
@@ -76,42 +80,62 @@ public class Player{
         //add Exception (try/catch)
     }
 
-    public void MakeChildren(Player player1, Player player2){}
-        //if(ChildrenCounter <  // size of how many children player can have){
-           //if(size - actives > 0){
-           // ChildrenCounter ++;
-           // //Player Id/ child = new Player(all of the stuff)
-           //actives.add(id/child)
-          // id/child get method
-          // player1.SetBoardElement(ChildrenCounter + beggining index of children depending on size of the world, child tuple)
-        // player2.SetBoardElement(ChildrenCounter + beggining index of children depending on size of the world , child tuple)
-        // get metgod fpr player1 tuple
-        // id/child.SetBoardElement(place set by size of the world, tuple of player1)
-        // get method for player2 tuple
-        // id/child.SetBoardElement(place set by the world +1 , tuple of player2)
-           // W SRODKU  if(Player1 isMember == true || Player2 isMember == true){ SETNAC MU ZE JEST W CULT
-    //}
-           //}
+    public void kill(Player victim){
+        Random r=new Random();
+        int outcome=r.nextInt(2);
+        if(outcome==1){
+            this.game.sendMessage(this,victim,Messages.KILLED);
+        }else{
+            this.game.sendMessage(this,victim,Messages.FAILEDKILL);
+        }
+    }
 
+    public void MakeChildren(Player player2){
+        int possible=sigma();
+        Random random = new Random();
+        int nChildren=random.nextInt(possible+1);
+        this.ChildrenCounter+=nChildren;
+        this.game.babiesBorn+=nChildren;
 
-    /*public void MakeChildren(Player player1, Player player2){
-        if( player1.ChildrenCounter < getAmountChildren(size) && player2.ChildrenCounter < getAmountChildren(size)){
-            if( size - size.actives > 0){ //spr czy dostepne dane
-                this.ChildrenCounter++;
-                Player PlayerChild = new Player(size.actives + 1,size,this); //zeby ID sie zgadzalo
-                actives.add(PlayerChild);
-                player1.SetBoardElement(3+ player1.ChildrenCounter, newTuple(PlayerChild.id ,3+ player1.ChildrenCounter)); //dodac indeksy
-                player2.SetBoardElement(3+ player2.ChildrenCounter, newTuple(PlayerChild.id ,3+ player2.ChildrenCounter)); //dodac indeksy
-                PlayerChild.SetBoardElement(); //dodac indeksy
-                PlayerChild.SetBoardElement(); //dodac indeksy
-                if(player1.isMember() == true || player2.isMember() == true){
-                    addMember(p);
-                    
-                }
+        for (int i=0;i<=nChildren;i++) {
+            //creates child and puts it in actives
+            int newID=this.game.findEmptySpotInActives();
+            Player playerChild = new Player(newID, this.size, this.game); //zeby ID sie zgadzalo
+            playerChild.stats.setAge(0);//the age is randomised at first, but we put it to zero
+            this.game.actives[newID]=playerChild;
+
+            //finds the index child is gonna have in parent's board
+            int beginning=this.size.BeginningChildrenInterval();
+            int end=this.size.EndChildrenInterval();
+            int newPositionOne=findEmptySpotInBoard(beginning,end);
+            int newPositionTwo=player2.findEmptySpotInBoard(beginning,end);
+
+            //updates const of number of active players
+            this.game.activesSize++;
+
+            //puts child in both parents' boards and them in child's board
+            this.board.setBoardElement(newPositionOne, new Tuple(playerChild.id, this.size.getParentOneIndex()));
+            player2.board.setBoardElement(newPositionTwo, new Tuple(playerChild.id, this.size.getParentTwoIndex()));
+            playerChild.board.setBoardElement(this.size.getParentOneIndex(), new Tuple(this.id,newPositionOne)); //dodac indeksy
+            playerChild.board.setBoardElement(this.size.getParentTwoIndex(), new Tuple(player2.id,newPositionTwo)); //dodac indeksy
+
+            //if one of the parents is in cult, the child is a member from birth
+            if (this.isMember || player2.isMember) {
+                this.cult.addMember(playerChild.makeMember());
             }
         }
     }
-    */
+
+    public int sigma(){
+        //check how many children person can have
+        int possible=this.game.size.getAmountChildren()-this.ChildrenCounter;
+        //check how many children possible in universe
+        int available=this.game.size.maxSize-this.game.activesSize;
+        if (available < possible) {
+            possible=available;
+        }
+        return possible;
+    }
 
     public SimpleMember makeMember(){
         SimpleMember c = new SimpleMember(this.id,board.size,this.game);
@@ -126,10 +150,6 @@ public class Player{
         this.cultMember=c;
         this.game.cultLeader=c;
         this.game.cult.setLeader(c);
-    }
-
-    public void kill(Player killer,Player victim){
-        //send kill message
     }
 
     public boolean isInBoard(int idperson){

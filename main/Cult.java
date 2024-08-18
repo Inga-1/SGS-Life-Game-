@@ -4,7 +4,7 @@ public class Cult {
     public ArrayList<CultMember> cult;
     private Leader leader;
     boolean started;//0 not started, 1 started
-    private String god;
+    String god;
     public Cult(){
         cult=new ArrayList<CultMember>();
         this.god="Loki"; //make it get from input
