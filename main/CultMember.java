@@ -18,7 +18,7 @@ public abstract class CultMember extends Player{
     public void question(){
         Random rand = new Random();
         int CoinFlip = rand.nextInt(1);
-        if (super(faith) < 4 && super(willpower) > 2 && CoinFlip == 1) CultMember.escape();
+        if (super(FAITH) < 4 && super(WILL) > 2 && CoinFlip == 1) CultMember.escape();
         else {int f=this.stats.getFaith();
         this.stats.setFaith(f-1);}
     }
