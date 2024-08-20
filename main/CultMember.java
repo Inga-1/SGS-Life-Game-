@@ -23,6 +23,10 @@ public abstract class CultMember extends Player{
         this.stats.setFaith(f-1);}
     }
     public void escape(){
+        this.cult.cult.remove(member);
+        member.isMember=false;
+        member.cultMember=null;
+        System.out.println(member.id+"has escaped the cult.");
     }
     public void changeRole(Role r){
         role=r;
