@@ -1,4 +1,5 @@
 package main;
+import java.util.Random;
 
 public abstract class CultMember extends Player{
     public enum Role {
@@ -15,8 +16,13 @@ public abstract class CultMember extends Player{
         this.stats.setFaith(f+1);
     }
     public void question(){
-        int f=this.stats.getFaith();
-        this.stats.setFaith(f-1);
+        Random rand = new Random();
+        int CoinFlip = rand.nextInt(1);
+        if (super(faith) < 4 && super(willpower) > 2 && CoinFlip == 1) CultMember.escape();
+        else {int f=this.stats.getFaith();
+        this.stats.setFaith(f-1);}
+    }
+    public void escape(){
     }
     public void changeRole(Role r){
         role=r;
