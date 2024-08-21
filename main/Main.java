@@ -29,13 +29,12 @@ public class Main {
 
 
 
-        System.out.println("Chosen size: "+size.name);
+        System.out.println("Chosen size: "+size.name+"\n\n");
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        /*Game game=new Game(size);
+        Game game=new Game(size);
         game.startGame();
-        game.gameThread.sleep(10000);
-        game.massSuicide();*/
+        game.gameThread.sleep(60000);
 
 
         /*Player p=new Player('a',10,10);

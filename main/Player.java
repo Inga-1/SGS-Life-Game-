@@ -37,6 +37,7 @@ public class Player{
         this.id=id;
         this.game=game;
         this.size=size;
+        this.cult=this.game.cult;
 
         status=1;
         Stats stats=new Stats();
@@ -60,8 +61,7 @@ public class Player{
         String bs=board.toString();
         String ps=profile.toString();
         Tuple<String,String> test=new Tuple<>(bs,ps);
-        String s="id: "+this.id+"\nstatus: "+this.status+"\nname: "+this.name+"\nsurname: "+this.surname+"\ngender: "+this.gender+"\n\nstats: "+this.stats.toString()+"\n\nboard: "+bs+"\nprofile: "+ps+"\nconfiguration: "+test.toString();
-        return s;
+        return "id: "+ this.id+"\nstatus: "+ this.status+"\nname: "+ this.name+"\nsurname: "+ this.surname+"\ngender: "+ this.gender+"\n\nstats: "+ this.stats.toString()+"\n\nboard: "+bs+"\nprofile: "+ps+"\nconfiguration: "+ test;
     }
     public Board getBoard(){
         return board;
@@ -72,11 +72,6 @@ public class Player{
     public CultMember getCultMember(){
         int i = this.cult.cult.indexOf(this.cultMember);
         return this.cult.cult.get(i);
-        //add Exception (try/catch)
-    }
-    public int getCultIndex(){
-        int i = this.cult.cult.indexOf(this.cultMember);
-        return i;
         //add Exception (try/catch)
     }
 
@@ -112,12 +107,13 @@ public class Player{
 
             //updates const of number of active players
             this.game.activesSize++;
+            this.game.possibleChildren--;
 
             //puts child in both parents' boards and them in child's board
-            this.board.setBoardElement(newPositionOne, new Tuple(playerChild.id, this.size.getParentOneIndex()));
-            player2.board.setBoardElement(newPositionTwo, new Tuple(playerChild.id, this.size.getParentTwoIndex()));
-            playerChild.board.setBoardElement(this.size.getParentOneIndex(), new Tuple(this.id,newPositionOne)); //dodac indeksy
-            playerChild.board.setBoardElement(this.size.getParentTwoIndex(), new Tuple(player2.id,newPositionTwo)); //dodac indeksy
+            this.board.setBoardElement(newPositionOne, new Tuple<>(playerChild.id, this.size.getParentOneIndex()));
+            player2.board.setBoardElement(newPositionTwo, new Tuple<>(playerChild.id, this.size.getParentTwoIndex()));
+            playerChild.board.setBoardElement(this.size.getParentOneIndex(), new Tuple<>(this.id,newPositionOne)); //dodac indeksy
+            playerChild.board.setBoardElement(this.size.getParentTwoIndex(), new Tuple<>(player2.id,newPositionTwo)); //dodac indeksy
 
             //if one of the parents is in cult, the child is a member from birth
             if (this.isMember || player2.isMember) {
@@ -138,8 +134,7 @@ public class Player{
     }
 
     public SimpleMember makeMember(){
-        SimpleMember c = new SimpleMember(this.id,board.size,this.game);
-        this.cultMember=c;
+        this.cultMember= new SimpleMember(this.id,board.size, this.game);
         return (SimpleMember) this.cultMember;
         //add Exception (try/catch)
     }
@@ -152,19 +147,25 @@ public class Player{
         this.game.cult.setLeader(c);
     }
 
-    public boolean isInBoard(int idperson){
+    public boolean isInBoard(int idPerson){
         for (int j = 0; j < this.board.len; j++) {
-            int idneeded = this.board.board[j].getFirst();
-            if (idneeded == idperson) {
+            int idNeeded=-1;
+            if(this.board.board[j]!=null && this.board.board[j].getFirst()!=null) {
+                idNeeded = this.board.board[j].getFirst();
+            }
+            if (idNeeded == idPerson) {
                 return true;
             }
         }
         return false;
     }
-    public int indexInBoard(int idperson){
+    public int indexInBoard(int idPerson){
         for (int j = 0; j < this.board.len; j++) {
-            int idneeded = this.board.board[j].getFirst();
-            if (idneeded == idperson) {
+            int idNeeded=-1;
+            if(this.board.board[j]!=null && this.board.board[j].getFirst()!=null) {
+                idNeeded = this.board.board[j].getFirst();
+            }
+            if (idNeeded == idPerson) {
                 return j;
             }
         }
@@ -173,36 +174,31 @@ public class Player{
     public boolean isInFriends(int idperson){
         int beginning=this.game.size.BeginningFriendsInterval();
         int end=this.game.size.EndFriendsInterval();
+        return find(idperson, beginning, end);
+    }
+
+    private boolean find(int idperson, int beginning, int end) {
         for(int k = beginning; k <= end; k++){
-            int idneeded = this.board.board[k].getFirst(); // idk if that's key and if its not better to do just second loop
-            if (idneeded == idperson) {
+            int idNeeded=-1;
+            if(this.board.board[k]!=null && this.board.board[k].getFirst()!=null) {
+                idNeeded = this.board.board[k].getFirst();
+            }
+            if (idNeeded == idperson) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean isInAcq(int idperson){
+    public boolean isInAcq(int idPerson){
         int beginning=this.game.size.BeginningAcqInterval();
         int end=this.game.size.EndAcqInterval();
-        for(int k = beginning; k <= end; k++){
-            int idneeded = this.board.board[k].getFirst(); // idk if that's key and if its not better to do just second loop
-            if (idneeded == idperson) {
-                return true;
-            }
-        }
-        return false;
+        return find(idPerson, beginning, end);
     }
-    public boolean isInEnemies(int idperson){
+    public boolean isInEnemies(int idPerson){
         int beginning=this.game.size.BeginningEnemiesInterval();
         int end=this.game.size.EndEnemiesInterval();
-        for(int k = beginning; k <= end; k++){
-            int idneeded = this.board.board[k].getFirst(); // idk if that's key and if its not better to do just second loop
-            if (idneeded == idperson) {
-                return true;
-            }
-        }
-        return false;
+        return find(idPerson, beginning, end);
     }
 
     public void decreaseConsts(int index){
@@ -219,7 +215,7 @@ public class Player{
 
     public int findEmptySpotInBoard(int beginning,int end){
         for(int i=beginning;i<=end;i++){
-            if(this.board.board[i].getFirst()==null){return i;}
+            if(this.board.board[i]!=null && this.board.board[i].getFirst()==null){return i;}
         }
         return 0;
     }
