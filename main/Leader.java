@@ -2,11 +2,12 @@ package main;
 
 public class Leader extends CultMember{
 
-    public Leader(int id, Size size, Game game) {
-        super(id, size,game);
+    public Leader(int id, Game game) {
+        super(id,game);
         this.role=Role.LEADER;
         this.stats.setCharisma(4);
         this.stats.setWillpower(4);
+        this.stats.setFaith(10);
         this.isLeader=true;
     }
     //diff stats compared to others

@@ -34,7 +34,6 @@ public class Main {
 
         Game game=new Game(size);
         game.startGame();
-        game.gameThread.sleep(60000);
 
 
         /*Player p=new Player('a',10,10);

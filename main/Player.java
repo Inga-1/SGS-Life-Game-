@@ -28,7 +28,7 @@ public class Player{
     protected Profile profile;
     protected Tuple<Board, Profile> config;
     protected int status; //0 dead, 1 alive
-    public Player(int id, Size size, Game game){
+    public Player(int id, Game game){
         this.ChildrenCounter = 0;
         this.FriendsCounter = 0;
         this.MeetsCounter = 0;
@@ -36,7 +36,7 @@ public class Player{
 
         this.id=id;
         this.game=game;
-        this.size=size;
+        this.size=this.game.size;
         this.cult=this.game.cult;
 
         status=1;
@@ -53,8 +53,8 @@ public class Player{
         isLeader=false;
         this.cultMember=null;
 
-        board=new Board(id,size);
-        profile=new Profile(size);
+        board=new Board(id,this.size);
+        profile=new Profile(this.size);
         config=new Tuple<>(board,profile);
     }
     public String toString(){
@@ -95,29 +95,31 @@ public class Player{
         for (int i=0;i<=nChildren;i++) {
             //creates child and puts it in actives
             int newID=this.game.findEmptySpotInActives();
-            Player playerChild = new Player(newID, this.size, this.game); //zeby ID sie zgadzalo
-            playerChild.stats.setAge(0);//the age is randomised at first, but we put it to zero
-            this.game.actives[newID]=playerChild;
+            if(newID>=0) {
+                Player playerChild = new Player(newID, this.game); //zeby ID sie zgadzalo
+                playerChild.stats.setAge(0);//the age is randomised at first, but we put it to zero
+                this.game.actives[newID] = playerChild;
 
-            //finds the index child is gonna have in parent's board
-            int beginning=this.size.BeginningChildrenInterval();
-            int end=this.size.EndChildrenInterval();
-            int newPositionOne=findEmptySpotInBoard(beginning,end);
-            int newPositionTwo=player2.findEmptySpotInBoard(beginning,end);
+                //finds the index child is gonna have in parent's board
+                int newPositionOne = findEmptySpotInBoard(this.size.BeginningChildrenInterval(), this.size.EndChildrenInterval());
+                int newPositionTwo = player2.findEmptySpotInBoard(this.size.BeginningChildrenInterval(), this.size.EndChildrenInterval());
+                if (newPositionOne >= 0 && newPositionTwo >= 0) {
+                //updates const of number of active players
+                this.game.activesSize++;
+                this.game.possibleChildren--;
 
-            //updates const of number of active players
-            this.game.activesSize++;
-            this.game.possibleChildren--;
+                //puts child in both parents' boards and them in child's board
 
-            //puts child in both parents' boards and them in child's board
-            this.board.setBoardElement(newPositionOne, new Tuple<>(playerChild.id, this.size.getParentOneIndex()));
-            player2.board.setBoardElement(newPositionTwo, new Tuple<>(playerChild.id, this.size.getParentTwoIndex()));
-            playerChild.board.setBoardElement(this.size.getParentOneIndex(), new Tuple<>(this.id,newPositionOne)); //dodac indeksy
-            playerChild.board.setBoardElement(this.size.getParentTwoIndex(), new Tuple<>(player2.id,newPositionTwo)); //dodac indeksy
+                    this.board.setBoardElement(newPositionOne, new Tuple<>(playerChild.id, this.size.getParentOneIndex()));
+                    player2.board.setBoardElement(newPositionTwo, new Tuple<>(playerChild.id, this.size.getParentTwoIndex()));
+                    playerChild.board.setBoardElement(this.size.getParentOneIndex(), new Tuple<>(this.id, newPositionOne)); //dodac indeksy
+                    playerChild.board.setBoardElement(this.size.getParentTwoIndex(), new Tuple<>(player2.id, newPositionTwo)); //dodac indeksy
+                }
 
-            //if one of the parents is in cult, the child is a member from birth
-            if (this.isMember || player2.isMember) {
-                this.cult.addMember(playerChild.makeMember());
+                //if one of the parents is in cult, the child is a member from birth
+                if (this.isMember || player2.isMember) {
+                    this.cult.addMember(playerChild.makeMember());
+                }
             }
         }
     }
@@ -130,18 +132,19 @@ public class Player{
         if (available < possible) {
             possible=available;
         }
+        if(possible>4){possible=4;}
         return possible;
     }
 
     public SimpleMember makeMember(){
-        this.cultMember= new SimpleMember(this.id,board.size, this.game);
+        this.cultMember= new SimpleMember(this.id, this.game);
         return (SimpleMember) this.cultMember;
         //add Exception (try/catch)
     }
 
     //for naming an heir
     public void makeLeader(){
-        Leader c = new Leader(this.id,board.size,this.game);
+        Leader c = new Leader(this.id,this.game);
         this.cultMember=c;
         this.game.cultLeader=c;
         this.game.cult.setLeader(c);
@@ -215,8 +218,8 @@ public class Player{
 
     public int findEmptySpotInBoard(int beginning,int end){
         for(int i=beginning;i<=end;i++){
-            if(this.board.board[i]!=null && this.board.board[i].getFirst()==null){return i;}
+            if(this.board.board[i]==null || this.board.board[i].getFirst()==null){return i;}
         }
-        return 0;
+        return -1;
     }
 }

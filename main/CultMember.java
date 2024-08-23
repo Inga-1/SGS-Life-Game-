@@ -7,8 +7,8 @@ public abstract class CultMember extends Player{
         LEADER,SHAMAN,PRIEST,NONE
     }
     protected Role role;
-    public CultMember(int id,Size size,Game game){
-        super(id,size,game);
+    public CultMember(int id,Game game){
+        super(id,game);
         this.role=Role.NONE;
         this.cultMember=this;
         this.isMember=true;
@@ -19,7 +19,7 @@ public abstract class CultMember extends Player{
     }
     public void question(){
         int f=this.stats.getFaith();
-        if(f<=0){
+        if(f<=0 && !this.isLeader){
             Random rand= new Random();
             int n= rand.nextInt(2);
             if(n==1){

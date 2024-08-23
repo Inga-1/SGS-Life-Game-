@@ -22,6 +22,7 @@ public class Cult {
     }
     public void removeMember(Player p){
         p.isMember=false;
-        cult.add(p.cultMember);
+        int i=p.cultMember.getCultIndex();
+        cult.remove(i);
     }
 }

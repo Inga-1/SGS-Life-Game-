@@ -38,7 +38,7 @@ public enum Size {
         return 2;
     }
     public int EndChildrenInterval(){
-        return getAmountChildren()+2;
+        return getAmountChildren()+1;
     }
 
     //parents
@@ -76,11 +76,11 @@ public enum Size {
     public int getAmountAcq(){
         switch (this){
             case SMALL:
-                return 14;
+                return 15;
             case MEDIUM:
-                return 30;
+                return 31;
             case LARGE:
-                return 60;
+                return 61;
             default:
                 throw new IllegalStateException("Unexpected value: " + this);
         }
