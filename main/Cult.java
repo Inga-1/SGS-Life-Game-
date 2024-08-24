@@ -19,6 +19,19 @@ public class Cult {
         p.isMember=true;
         CultMember c=p.makeMember();
         cult.add(c);
+        if (p.ChildrenCounter>0){
+            for(int i=p.size.BeginningChildrenInterval();i<=p.size.EndChildrenInterval();i++){
+                if(p.board.board[i]!=null && p.board.board[i].getFirst()!=null){
+                    int id=p.board.board[i].getFirst();
+                    Player child=p.game.actives[id];
+                    if(child.stats.getAge()<19){
+                        child.isMember=true;
+                        CultMember childC=child.makeMember();
+                        cult.add(childC);
+                    }
+                }
+            }
+        }
     }
     public void removeMember(Player p){
         p.isMember=false;

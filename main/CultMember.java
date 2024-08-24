@@ -14,24 +14,28 @@ public abstract class CultMember extends Player{
         this.isMember=true;
     }
     public void pray(){
-        int f=this.stats.getFaith();
-        this.stats.setFaith(f+1);
+        int f = this.stats.getFaith();
+        if(f>0 || f<10) {
+            this.stats.setFaith(f + 1);
+        }
     }
     public void question(){
         int f=this.stats.getFaith();
-        if(f<=0 && !this.isLeader){
-            Random rand= new Random();
-            int n= rand.nextInt(2);
-            if(n==1){
-                escape();
-            }else if(this.isInBoard(this.game.cultLeader.id)){
-                this.game.sendMessage(this,this.game.cultLeader,Messages.FAILEDESCAPE);
-            }else if (this.MeetsCounter<this.size.getAmountAcq()
-                    && this.game.cultLeader.MeetsCounter<this.size.getAmountAcq()){
-                this.game.sendMessage(this,this.game.cultLeader,Messages.MEET);
+        if(f<10){
+            if (f <= 0 && !this.isLeader) {
+                Random rand = new Random();
+                int n = rand.nextInt(2);
+                if (n == 1) {
+                    escape();
+                } else if (this.isInBoard(this.game.cultLeader.id)) {
+                    this.game.sendMessage(this, this.game.cultLeader, Messages.FAILEDESCAPE);
+                } else if (this.MeetsCounter < this.size.getAmountAcq()
+                        && this.game.cultLeader.MeetsCounter < this.size.getAmountAcq()) {
+                    this.game.sendMessage(this, this.game.cultLeader, Messages.MEET);
+                }
+            } else {
+                this.stats.setFaith(f - 1);
             }
-        }else {
-            this.stats.setFaith(f - 1);
         }
     }
 

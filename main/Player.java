@@ -89,8 +89,6 @@ public class Player{
         int possible=sigma();
         Random random = new Random();
         int nChildren=random.nextInt(possible+1);
-        this.ChildrenCounter+=nChildren;
-        this.game.babiesBorn+=nChildren;
 
         for (int i=0;i<=nChildren;i++) {
             //creates child and puts it in actives
@@ -104,11 +102,13 @@ public class Player{
                 int newPositionOne = findEmptySpotInBoard(this.size.BeginningChildrenInterval(), this.size.EndChildrenInterval());
                 int newPositionTwo = player2.findEmptySpotInBoard(this.size.BeginningChildrenInterval(), this.size.EndChildrenInterval());
                 if (newPositionOne >= 0 && newPositionTwo >= 0) {
-                //updates const of number of active players
-                this.game.activesSize++;
-                this.game.possibleChildren--;
+                    //updates const of number of active players
+                    this.game.activesSize++;
+                    this.game.possibleChildren--;
+                    this.ChildrenCounter++;
+                    this.game.babiesBorn++;
 
-                //puts child in both parents' boards and them in child's board
+                    //puts child in both parents' boards and them in child's board
 
                     this.board.setBoardElement(newPositionOne, new Tuple<>(playerChild.id, this.size.getParentOneIndex()));
                     player2.board.setBoardElement(newPositionTwo, new Tuple<>(playerChild.id, this.size.getParentTwoIndex()));
@@ -128,11 +128,11 @@ public class Player{
         //check how many children person can have
         int possible=this.game.size.getAmountChildren()-this.ChildrenCounter;
         //check how many children possible in universe
-        int available=this.game.size.maxSize-this.game.activesSize;
-        if (available < possible) {
-            possible=available;
+        //int available=this.game.size.maxSize-this.game.activesSize;
+        if (this.game.possibleChildren < possible) {
+            possible=this.game.possibleChildren;
         }
-        if(possible>4){possible=4;}
+        if(possible>3){possible=3;}
         return possible;
     }
 

@@ -253,6 +253,7 @@ public class Game implements Runnable{
                                 if (p.sigma() > 0) {
                                     p.MakeChildren(sender);
                                 }
+                                sendMessage(p,sender,Messages.NONE);
                                 break;
                             case KILLED:
                                 if (p.isLeader) {
@@ -280,6 +281,7 @@ public class Game implements Runnable{
                                         int newEnemyPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
                                         if (newEnemyPosition >= 0) {
                                             p.board.setBoardElement(newEnemyPosition, tup);
+                                            sendMessage(p, sender, Messages.NONE);
                                         }
                                     } else if (p.isInEnemies(sender.id)) {
                                         p.kill(sender);
@@ -291,6 +293,7 @@ public class Game implements Runnable{
                                         int newEnemyPosition = sender.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
                                         if (newEnemyPosition >= 0) {
                                             sender.board.setBoardElement(newEnemyPosition, p.board.getBoardElement(yourIndex));
+                                            sendMessage(p, sender, Messages.NONE);
                                         }
                                     } else if (sender.isInEnemies(p.id)) {
                                         sender.kill(p);
@@ -322,6 +325,7 @@ public class Game implements Runnable{
                                 break;
                             default:
                                 //When we are SENDING messages, NOT RECEIVING
+                                sendMessage(p,sender,Messages.NONE);
                                 defaultMethod(p);
 
 
@@ -396,7 +400,10 @@ public class Game implements Runnable{
 
             //also suicide might be only if willpower is 4 or 5
         }
-        if(p.isMember || p.isLeader){recruit(p);}
+        if(p.isMember || p.isLeader){
+            if(p.MeetsCounter==0){meet(p);}
+            recruit(p);
+        }
     }
 
 
@@ -495,6 +502,7 @@ public class Game implements Runnable{
 
     public void recruit(Player p){
         int idreceiver = -1;
+        int yourIndex=-1;
         Player receiver = null;
         Random random=new Random();
         boolean condition=p.MeetsCounter>0;
@@ -502,11 +510,12 @@ public class Game implements Runnable{
             int i=random.nextInt(this.size.getAmountAcq())+this.size.BeginningAcqInterval();
             if(p.board.board[i]!=null && p.board.board[i].getFirst()!=null){
                 idreceiver= p.board.board[i].getFirst();
+                yourIndex=p.board.board[i].getSecond();
                 receiver=actives[idreceiver];
                 condition=false;
             }
         }
-        if(p.stats.getAge()>19 && receiver!=null && p.isMember && !receiver.isMember){
+        if(p.stats.getAge()>19 && receiver!=null && p.isMember && !receiver.isMember && receiver.profile.getProfileElement(yourIndex)!=Messages.RECRUITED){
             Random r = new Random();
             int pThrow=r.nextInt(30);
             int rThrow=r.nextInt(30);
@@ -580,6 +589,7 @@ public class Game implements Runnable{
     }
 
     private void clearRelationships(Player p) {
+        //p is the dead one
         for (int i = 0; i < p.board.board.length; i++) {
             Tuple<Integer, Integer> relationship = p.board.board[i];
             if (relationship != null && relationship.getFirst()!=null && relationship.getSecond()!=null) {
@@ -587,6 +597,7 @@ public class Game implements Runnable{
                 int indexInFriendBoard = relationship.getSecond();
                 Player friend = actives[friendId];
                 if (friend != null) {
+                    sendMessage(p,friend,Messages.NONE);
                     friend.board.board[indexInFriendBoard] = null;
                     friend.decreaseConsts(indexInFriendBoard);
                 }
@@ -640,5 +651,6 @@ public class Game implements Runnable{
 
     public void terminateGame(){
         gameThread.interrupt();
+        gameThread.isInterrupted();
     }
 }
