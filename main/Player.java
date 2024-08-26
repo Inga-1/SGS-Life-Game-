@@ -69,6 +69,7 @@ public class Player{
     public Profile getProfile(){
         return profile;
     }
+
     public CultMember getCultMember(){
         int i = this.cult.cult.indexOf(this.cultMember);
         return this.cult.cult.get(i);
@@ -96,29 +97,32 @@ public class Player{
             if(newID>=0) {
                 Player playerChild = new Player(newID, this.game); //zeby ID sie zgadzalo
                 playerChild.stats.setAge(0);//the age is randomised at first, but we put it to zero
-                this.game.actives[newID] = playerChild;
 
                 //finds the index child is gonna have in parent's board
                 int newPositionOne = findEmptySpotInBoard(this.size.BeginningChildrenInterval(), this.size.EndChildrenInterval());
                 int newPositionTwo = player2.findEmptySpotInBoard(this.size.BeginningChildrenInterval(), this.size.EndChildrenInterval());
                 if (newPositionOne >= 0 && newPositionTwo >= 0) {
-                    //updates const of number of active players
-                    this.game.activesSize++;
-                    this.game.possibleChildren--;
-                    this.ChildrenCounter++;
-                    this.game.babiesBorn++;
+
+                    this.game.actives[newID] = playerChild;
 
                     //puts child in both parents' boards and them in child's board
-
                     this.board.setBoardElement(newPositionOne, new Tuple<>(playerChild.id, this.size.getParentOneIndex()));
                     player2.board.setBoardElement(newPositionTwo, new Tuple<>(playerChild.id, this.size.getParentTwoIndex()));
                     playerChild.board.setBoardElement(this.size.getParentOneIndex(), new Tuple<>(this.id, newPositionOne)); //dodac indeksy
                     playerChild.board.setBoardElement(this.size.getParentTwoIndex(), new Tuple<>(player2.id, newPositionTwo)); //dodac indeksy
+
+                    //updates const of number of active players
+                    game.activesSize++;
+                    game.possibleChildren--;
+                    this.ChildrenCounter++;
+                    player2.ChildrenCounter++;
+                    game.babiesBorn++;
                 }
 
                 //if one of the parents is in cult, the child is a member from birth
                 if (this.isMember || player2.isMember) {
                     this.cult.addMember(playerChild.makeMember());
+                    game.childrenInCult++;
                 }
             }
         }
@@ -136,15 +140,15 @@ public class Player{
         return possible;
     }
 
-    public SimpleMember makeMember(){
-        this.cultMember= new SimpleMember(this.id, this.game);
-        return (SimpleMember) this.cultMember;
+    public CultMember makeMember(){
+        this.cultMember= new SimpleMember(this);
+        return this.cultMember;
         //add Exception (try/catch)
     }
 
     //for naming an heir
     public void makeLeader(){
-        Leader c = new Leader(this.id,this.game);
+        Leader c = new Leader(this);
         this.cultMember=c;
         this.game.cultLeader=c;
         this.game.cult.setLeader(c);

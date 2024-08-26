@@ -7,11 +7,25 @@ public abstract class CultMember extends Player{
         LEADER,SHAMAN,PRIEST,NONE
     }
     protected Role role;
-    public CultMember(int id,Game game){
-        super(id,game);
+    public CultMember(Player p){
+        super(p.id,p.game);
+
+        this.ChildrenCounter = p.ChildrenCounter;
+        this.FriendsCounter = p.FriendsCounter;
+        this.MeetsCounter = p.MeetsCounter;
+        this.EnemiesCounter=p.EnemiesCounter;
+
+        status=p.status;
+        this.stats=p.stats;
+
+        board=p.board;
+        profile=p.profile;
+        config=p.config;
+
         this.role=Role.NONE;
         this.cultMember=this;
         this.isMember=true;
+        this.isLeader=p.isLeader;
     }
     public void pray(){
         int f = this.stats.getFaith();

@@ -21,7 +21,8 @@ public class Game implements Runnable{
         actives= new Player[this.maxsize];
         Arrays.fill(actives, null);
         this.cult=new Cult();
-        Leader leader=new Leader(0,this);
+        Player pl=new Player(0,this);
+        Leader leader=new Leader(pl);
         this.cult.setLeader(leader);
         this.cultLeader=leader;
         actives[0]=leader;
@@ -54,8 +55,10 @@ public class Game implements Runnable{
     int suicides;
     int babiesBorn;
     int newMembers;
+    int childrenInCult;
     int membersEscaped;
     int membersKickedOut;
+    int deadInCult;
 
     //for EVENTS
     int maxFaith;//mass suicide event
@@ -82,8 +85,10 @@ public class Game implements Runnable{
                 suicides=0;
                 babiesBorn=0;
                 newMembers=0;
+                childrenInCult=0;
                 membersEscaped=0;
                 membersKickedOut=0;
+                deadInCult=0;
                 //maybe we could also display at end of each round the cult stats
 
                 //for EVENTS
@@ -100,7 +105,7 @@ public class Game implements Runnable{
                         age=p.stats.getAge();
                         if (age > 99) {
                             die(p, false);
-                            deaths++;
+                            this.deaths++;
                         }
 
                         //check if alive after updating age
@@ -122,10 +127,16 @@ public class Game implements Runnable{
                 System.out.println(suicides+" people committed suicide,");
                 System.out.println(babiesBorn+" children were born,");
                 System.out.println("Number of people in universe: "+activesSize);
+
+                System.out.println("\nnMembers: "+nMembers());
+                System.out.println("isEveryoneMember: "+isEveryoneMember());
+
                 System.out.println("\nIN THE CULT:");
                 System.out.println(newMembers+" new members were recruited,");
+                System.out.println(childrenInCult+" children were born in the cult,");
                 System.out.println(membersEscaped+" members have betrayed us and run away,");
-                System.out.println(membersKickedOut+" members were kicked out.\n");
+                System.out.println(membersKickedOut+" members were kicked out.");
+                System.out.println(deadInCult+" members have died.\n");
                 System.out.println("Number of members: "+cult.cult.size()+"\n\n");
 
                 Thread.sleep(500);
@@ -174,7 +185,7 @@ public class Game implements Runnable{
 
                     //i know here we get info about sender but its int so not the full tuple???
                     Player sender= actives[idsender];
-                    if(sender!=null) {
+                    if(sender!=null && el!=null) {
                         switch (el) {
                             case NONE:
                                 defaultMethod(p);
@@ -185,7 +196,7 @@ public class Game implements Runnable{
 
                             case RECRUITED:
                                 //double check this because might have happend already before in the loop (from someone else)
-                                if (!p.isMember) {
+                                if (p.isMember==false) {
                                     this.cult.addMember(p.makeMember());
                                     if (p.MeetsCounter < this.size.getAmountAcq()
                                             && this.cultLeader.MeetsCounter < this.size.getAmountAcq()) {
@@ -377,11 +388,11 @@ public class Game implements Runnable{
             argue(p);
             //argue
         } else if (j<63) {
-            if(p.isMember){
+            if(p.isMember && p.stats.getFaith()<=0 && p.stats.getFaith()>=10){
                 p.cultMember.pray();
             }
         } else if (j<78) {
-            if(p.isMember && p.stats.getWillpower()>=1){
+            if(p.isMember && p.stats.getWillpower()>=1 && p.stats.getFaith()<=0 && p.stats.getFaith()>=10){
                 p.cultMember.question();
             }
         } else if (j<98) {
@@ -515,7 +526,7 @@ public class Game implements Runnable{
                 condition=false;
             }
         }
-        if(p.stats.getAge()>19 && receiver!=null && p.isMember && !receiver.isMember && receiver.profile.getProfileElement(yourIndex)!=Messages.RECRUITED){
+        if(p.stats.getAge()>19 && receiver!=null && receiver.status==1 && p.isMember && receiver.isMember==false && receiver.profile.getProfileElement(yourIndex)!=Messages.RECRUITED){
             Random r = new Random();
             int pThrow=r.nextInt(30);
             int rThrow=r.nextInt(30);
@@ -554,37 +565,37 @@ public class Game implements Runnable{
 //-----------METHODS FOR DYING----------------------------------------------------------------------------------------------
     public void killed(Player killer,Player victim){
         victim.status=0;//not active anymore
-        if(victim.isMember){
-            int i=victim.cultMember.getCultIndex();
-            if(i>=0){this.cult.cult.remove(i);}
+
+        if (victim.isMember) {
+            this.cult.removeMember(victim);
+            deadInCult++;
         }
+
         clearRelationships(victim);
         actives[victim.id]=null;
-        this.activesSize--;
-        this.possibleChildren++;
-        System.out.println(victim.id+" has been killed by "+killer.id);
+
+        activesSize--;
+        possibleChildren++;
     }
 
     public void die(Player p, boolean isSuicide) {
         p.status = 0;
 
         if (p.isMember) {
-            int cultIndex = p.cultMember.getCultIndex();
-            if (cultIndex >= 0 && cultIndex < this.cult.cult.size()) {
-                this.cult.cult.remove(cultIndex);
-            }
+            this.cult.removeMember(p);
+            deadInCult++;
         }
 
         clearRelationships(p);
         actives[p.id]=null;
-        this.activesSize--;
-        this.possibleChildren++;
+
+        activesSize--;
+        possibleChildren++;
+
         if (isSuicide) {
             suicides++;
-            System.out.println(p.id + " has committed suicide.");
         } else {
             deaths++;
-            System.out.println(p.id + " has died of natural causes or illness.");
         }
     }
 
@@ -597,13 +608,11 @@ public class Game implements Runnable{
                 int indexInFriendBoard = relationship.getSecond();
                 Player friend = actives[friendId];
                 if (friend != null) {
-                    sendMessage(p,friend,Messages.NONE);
+                    friend.profile.setProfileElement(indexInFriendBoard,null);
                     friend.board.board[indexInFriendBoard] = null;
                     friend.decreaseConsts(indexInFriendBoard);
                 }
             }
-            p.board.board[i] = null;
-            p.decreaseConsts(i);
         }
     }
 
@@ -619,9 +628,9 @@ public class Game implements Runnable{
 
     //------------------------------------EVENTS-----------------------------------------------------------------------------------------------------------------------------
     public void checkEvents(){
-        if(maxFaith==this.cult.cult.size()*0.5){
+        if(maxFaith==this.cult.cult.size()*0.3){
             massSuicide();
-        } else if (minFaith==this.cult.cult.size()*0.5) {
+        } else if (minFaith==this.cult.cult.size()*0.3) {
             rebellion();
         } else if (attemptsOnLeader>=5) {
             conArtist();
@@ -648,9 +657,22 @@ public class Game implements Runnable{
     }
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    public boolean isEveryoneMember(){
+        for (Player p: actives){
+            if(p!=null && !p.isMember){return false;}
+        }
+        return true;
+    }
+
+    public int nMembers(){
+        int n = 0;
+        for (Player p: actives){
+            if(p!=null && p.isMember){n++;}
+        }
+        return n;
+    }
 
     public void terminateGame(){
         gameThread.interrupt();
-        gameThread.isInterrupted();
     }
 }

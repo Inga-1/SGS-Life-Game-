@@ -35,6 +35,26 @@ public class Main {
         Game game=new Game(size);
         game.startGame();
 
+        /*Player pl=new Player(0,game);
+        Leader l=new Leader(pl);
+        game.cult.setLeader(l);
+
+        Player player = null;
+        for(int i=1; i<7; i++){
+            player=new Player(i,game);
+            game.cult.addMember(player);
+        }
+        Player player2=new Player(7,game);
+        System.out.println(game.cult.cult.size());
+        System.out.println(game.cult);
+
+        game.killed(player2,player);
+
+        System.out.println(game.deadInCult);
+        System.out.println(game.cult.cult.size());
+        System.out.println(game.cult);
+        */
+        
 
         /*Player p=new Player('a',10,10);
         System.out.println(p.toString());
