@@ -130,6 +130,8 @@ public class Game implements Runnable{
 
                 System.out.println("\nnMembers: "+nMembers());
                 System.out.println("isEveryoneMember: "+isEveryoneMember());
+                System.out.println("minFaith: "+minFaith);
+                System.out.println("maxFaith: "+maxFaith);
 
                 System.out.println("\nIN THE CULT:");
                 System.out.println(newMembers+" new members were recruited,");
@@ -188,23 +190,36 @@ public class Game implements Runnable{
                     if(sender!=null && el!=null) {
                         switch (el) {
                             case NONE:
+                                sendMessage(p, sender, Messages.NONE);
                                 defaultMethod(p);
                                 break;
                             case MEET:
                                 sendMessage(p, sender, Messages.NONE);
+                                met++;
                                 break;
 
                             case RECRUITED:
                                 //double check this because might have happend already before in the loop (from someone else)
-                                if (p.isMember==false) {
-                                    this.cult.addMember(p.makeMember());
-                                    if (p.MeetsCounter < this.size.getAmountAcq()
+                                if (!p.isMember) {
+                                    this.cult.addMember(p);
+                                    if (!p.isInBoard(this.cultLeader.id) && p.MeetsCounter < this.size.getAmountAcq()
                                             && this.cultLeader.MeetsCounter < this.size.getAmountAcq()) {
-                                        sendMessage(p, this.cultLeader, Messages.MEET);
+                                        int newPositionP=p.findEmptySpotInBoard(this.size.BeginningAcqInterval(),this.size.EndAcqInterval());
+                                        int newPositionR=this.cultLeader.findEmptySpotInBoard(this.size.BeginningAcqInterval(),this.size.EndAcqInterval());
+                                        if (newPositionP>=0 && newPositionR>=0) {
+                                            p.board.setBoardElement(newPositionP, new Tuple<>(this.cultLeader.id, newPositionR));
+                                            p.MeetsCounter++;
+                                            this.cultLeader.board.setBoardElement(newPositionR, new Tuple<>(p.id, newPositionP));
+                                            this.cultLeader.MeetsCounter++;
+
+                                            //in PROFILE(messages)
+                                            //send meet message
+                                            sendMessage(p, this.cultLeader, Messages.MEET);
+                                        }
                                     }
                                     newMembers++;
                                 } else {
-                                    sender.cultMember.pray();
+                                    if(sender.cultMember!=null){sender.cultMember.pray();}
                                     //to even send the recruit message you have to be a member first, so no need to check
                                 }
                                 break;
@@ -276,7 +291,7 @@ public class Game implements Runnable{
                             case ARGUE:
                                 //if someone argues with leader they get kicked out
                                 if (sender.isMember && p.isMember && p.cultMember.role == CultMember.Role.LEADER) {
-                                    this.cultLeader.kickOut(sender.cultMember);
+                                    this.cultLeader.kickOut(sender);
                                     membersKickedOut++;
                                 }
 
@@ -320,17 +335,29 @@ public class Game implements Runnable{
                                     murdered++;
                                     attemptsOnLeader++;
                                 } else {
-                                    //if someone tries to kill you,it becomes your enemy
-                                    int newEnemyPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
-                                    if(newEnemyPosition>=0){p.board.setBoardElement(newEnemyPosition, tup);}
+                                    if (sender.EnemiesCounter < this.size.getAmountEnemies() && !sender.isInEnemies(p.id)) {
+                                        //if someone tries to kill you,it becomes your enemy
+                                        int newEnemyPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
+                                        if(newEnemyPosition>=0){p.board.setBoardElement(newEnemyPosition, tup);}
+                                    }else if (sender.isInEnemies(p.id)) {
+                                        sender.kill(p);
+                                    } else {
+                                        sendMessage(sender, p, Messages.NONE);
+                                    }
                                 }
                                 break;
                             case FAILEDESCAPE:
                                 if (sender.isMember && p.isMember && p.cultMember.role == CultMember.Role.LEADER) {
-                                    //idk, maybe put in enemies of leader
-                                    int newDefectorPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
-                                    if (newDefectorPosition != -1) {
-                                        p.board.setBoardElement(newDefectorPosition, tup);
+                                    if (sender.EnemiesCounter < this.size.getAmountEnemies() && !sender.isInEnemies(p.id)) {
+                                        //idk, maybe put in enemies of leader
+                                        int newDefectorPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
+                                        if (newDefectorPosition >= 0) {
+                                            p.board.setBoardElement(newDefectorPosition, tup);
+                                        }
+                                    }else if (sender.isInEnemies(p.id)) {
+                                        sender.kill(p);
+                                    } else {
+                                        sendMessage(sender, p, Messages.NONE);
                                     }
                                 }
                                 break;
@@ -365,9 +392,7 @@ public class Game implements Runnable{
         }
         //for EVENTS
         int faith=p.stats.getFaith();
-        if(faith==10){maxFaith++;} else if (faith==0 && p.isMember) {
-            minFaith++;
-        }
+        if(faith==10){maxFaith++;}
     }
 
     //----------------------DEFAULT---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -443,7 +468,6 @@ public class Game implements Runnable{
                 //in PROFILE(messages)
                 //send meet message
                 sendMessage(p, receiver, Messages.MEET);
-                met++;
             }
         }
     }
@@ -526,7 +550,7 @@ public class Game implements Runnable{
                 condition=false;
             }
         }
-        if(p.stats.getAge()>19 && receiver!=null && receiver.status==1 && p.isMember && receiver.isMember==false && receiver.profile.getProfileElement(yourIndex)!=Messages.RECRUITED){
+        if(p.stats.getAge()>19 && receiver!=null && p.status==1 && receiver.status==1 && p.isMember && !receiver.isMember && !receiver.alreadyRecruited()){
             Random r = new Random();
             int pThrow=r.nextInt(30);
             int rThrow=r.nextInt(30);
@@ -621,6 +645,7 @@ public class Game implements Runnable{
         if(heirTup!=null && heirTup.getFirst()!=null && heirTup.getSecond()!=null) {
             Player heir = actives[heirTup.getFirst()];
             heir.makeLeader();
+            System.out.println("We have a new leader!");
         }else{
             civilWar(); //CIVIL WAR EVENT
         }

@@ -19,8 +19,8 @@ public class Leader extends CultMember{
     //diff stats compared to others
 
     //kick out members
-    public void kickOut(CultMember member){
-        this.cult.cult.remove(member);
+    public void kickOut(Player member){
+        this.cult.cult.remove(member.cultMember);
         member.isMember=false;
         member.cultMember=null;
         System.out.println(member.id+"has been kicked out from the Cult.");

@@ -39,7 +39,7 @@ public class Player{
         this.size=this.game.size;
         this.cult=this.game.cult;
 
-        status=1;
+        this.status=1;
         Stats stats=new Stats();
         stats.randomizeStats();
         this.stats=stats;
@@ -117,12 +117,12 @@ public class Player{
                     this.ChildrenCounter++;
                     player2.ChildrenCounter++;
                     game.babiesBorn++;
-                }
 
-                //if one of the parents is in cult, the child is a member from birth
-                if (this.isMember || player2.isMember) {
-                    this.cult.addMember(playerChild.makeMember());
-                    game.childrenInCult++;
+                    //if one of the parents is in cult, the child is a member from birth
+                    if (this.isMember || player2.isMember) {
+                        this.cult.addMember(playerChild);
+                        game.childrenInCult++;
+                    }
                 }
             }
         }
@@ -150,6 +150,7 @@ public class Player{
     public void makeLeader(){
         Leader c = new Leader(this);
         this.cultMember=c;
+        c.stats.setAge(this.stats.getAge());
         this.game.cultLeader=c;
         this.game.cult.setLeader(c);
     }
@@ -206,6 +207,16 @@ public class Player{
         int beginning=this.game.size.BeginningEnemiesInterval();
         int end=this.game.size.EndEnemiesInterval();
         return find(idPerson, beginning, end);
+    }
+
+    public boolean alreadyRecruited(){
+        for(int i=0; i<profile.len; i++){
+            Messages m=profile.getProfileElement(i);
+            if(m==Messages.RECRUITED){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void decreaseConsts(int index){

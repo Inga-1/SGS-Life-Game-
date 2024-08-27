@@ -4,7 +4,7 @@ import java.util.Random;
 
 public abstract class CultMember extends Player{
     public enum Role {
-        LEADER,SHAMAN,PRIEST,NONE
+        LEADER,NONE
     }
     protected Role role;
     public CultMember(Player p){
@@ -15,8 +15,11 @@ public abstract class CultMember extends Player{
         this.MeetsCounter = p.MeetsCounter;
         this.EnemiesCounter=p.EnemiesCounter;
 
-        status=p.status;
+        this.status=p.status;
         this.stats=p.stats;
+        this.name=p.name;
+        this.surname=p.surname;
+        this.gender=p.gender;
 
         board=p.board;
         profile=p.profile;
@@ -29,7 +32,7 @@ public abstract class CultMember extends Player{
     }
     public void pray(){
         int f = this.stats.getFaith();
-        if(f>0 || f<10) {
+        if(f>0 && f<10) {
             this.stats.setFaith(f + 1);
         }
     }
@@ -37,6 +40,7 @@ public abstract class CultMember extends Player{
         int f=this.stats.getFaith();
         if(f<10){
             if (f <= 0 && !this.isLeader) {
+
                 Random rand = new Random();
                 int n = rand.nextInt(2);
                 if (n == 1) {
@@ -47,8 +51,9 @@ public abstract class CultMember extends Player{
                         && this.game.cultLeader.MeetsCounter < this.size.getAmountAcq()) {
                     this.game.sendMessage(this, this.game.cultLeader, Messages.MEET);
                 }
-            } else {
+            } else if (f>0){
                 this.stats.setFaith(f - 1);
+                if(this.stats.getFaith()<=0){game.minFaith++;}
             }
         }
     }

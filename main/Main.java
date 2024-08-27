@@ -35,6 +35,8 @@ public class Main {
         Game game=new Game(size);
         game.startGame();
 
+
+
         /*Player pl=new Player(0,game);
         Leader l=new Leader(pl);
         game.cult.setLeader(l);
@@ -54,7 +56,7 @@ public class Main {
         System.out.println(game.cult.cult.size());
         System.out.println(game.cult);
         */
-        
+
 
         /*Player p=new Player('a',10,10);
         System.out.println(p.toString());
