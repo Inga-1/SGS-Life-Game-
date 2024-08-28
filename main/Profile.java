@@ -14,7 +14,7 @@ public class Profile {
     public String toString(){
         String s=new String();
         s+="[";
-        for(Messages i:profile){s+=i.toString();}
+        for(Messages i:profile){if(i!=null){s+=" "+i.toString();}else{s+=" no messages";}}
         s+="]";
         return s;
     }

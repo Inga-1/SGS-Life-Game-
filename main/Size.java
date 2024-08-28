@@ -5,10 +5,10 @@ public enum Size {
     MEDIUM(50,25, "medium"),
     LARGE(100,40, "large");
 
-    int actives;
-    int possibleChildren;
-    int maxSize;
-    String name;
+    final int actives;
+    final int possibleChildren;
+    final int maxSize;
+    final String name;
 
     Size(int actives, int children, String name){
         this.actives=actives;

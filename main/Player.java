@@ -70,12 +70,6 @@ public class Player{
         return profile;
     }
 
-    public CultMember getCultMember(){
-        int i = this.cult.cult.indexOf(this.cultMember);
-        return this.cult.cult.get(i);
-        //add Exception (try/catch)
-    }
-
     public void kill(Player victim){
         Random r=new Random();
         int outcome=r.nextInt(2);
@@ -140,9 +134,9 @@ public class Player{
         return possible;
     }
 
-    public CultMember makeMember(){
+    public int makeMember(){
         this.cultMember= new SimpleMember(this);
-        return this.cultMember;
+        return this.cultMember.id;
         //add Exception (try/catch)
     }
 
@@ -156,8 +150,8 @@ public class Player{
     }
 
     public boolean isInBoard(int idPerson){
+        int idNeeded=-1;
         for (int j = 0; j < this.board.len; j++) {
-            int idNeeded=-1;
             if(this.board.board[j]!=null && this.board.board[j].getFirst()!=null) {
                 idNeeded = this.board.board[j].getFirst();
             }
@@ -168,8 +162,8 @@ public class Player{
         return false;
     }
     public int indexInBoard(int idPerson){
+        int idNeeded=-1;
         for (int j = 0; j < this.board.len; j++) {
-            int idNeeded=-1;
             if(this.board.board[j]!=null && this.board.board[j].getFirst()!=null) {
                 idNeeded = this.board.board[j].getFirst();
             }

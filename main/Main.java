@@ -6,12 +6,24 @@ public class Main {
 
         //--------------------- FOR SIZE -------------------------------------------------------------------------------------------------------------------------------------
         Scanner myObj = new Scanner(System.in);
-        int sizeNum;
+        int sizeNum = 0;
         Size size;
 
         // Enter username and press Enter
         System.out.println("Choose a size - Type 1 for SMALL, 2 for MEDIUM or 3 for LARGE:");
-        sizeNum = Integer.parseInt(myObj.nextLine());
+        boolean valid = false;
+        while (!valid){
+            try {
+                sizeNum = Integer.parseInt(myObj.nextLine());
+                if (sizeNum == 1 || sizeNum == 2 || sizeNum == 3) {
+                    valid = true;
+                } else {
+                    System.out.println("Invalid choice! Please choose the size of the universe by pressing: 1, 2, 3.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid choice! Please choose the size of the universe by pressing: 1, 2, 3.");
+            }
+        }
         switch (sizeNum){
             case 1:
                 size=Size.SMALL;
@@ -34,6 +46,7 @@ public class Main {
 
         Game game=new Game(size);
         game.startGame();
+        //System.out.println(game.seeActives());
 
 
 
