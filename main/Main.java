@@ -8,6 +8,7 @@ public class Main {
         Scanner myObj = new Scanner(System.in);
         int sizeNum = 0;
         Size size;
+        String god = null;
 
         // Enter username and press Enter
         System.out.println("Choose a size - Type 1 for SMALL, 2 for MEDIUM or 3 for LARGE:");
@@ -37,15 +38,26 @@ public class Main {
             default:
                 throw new IllegalStateException("Unexpected value: " + sizeNum);
         }
+        System.out.println("What do you want the name of our almighty god to be?");
+        boolean valid2 = false;
+        while (!valid2) {
+            god = myObj.nextLine();
+            if (!god.matches(".*[^a-zA-Z].*")) {
+                valid2 = true;
+            }else{
+                System.out.println("Invalid choice! Please insert a name without digits or special characters in it.");
+            }
+        }
 
 
 
+        System.out.println("Chosen size: "+size.name+" ");
+        System.out.println("Name of our god: "+god+"\n\n");
 
-        System.out.println("Chosen size: "+size.name+"\n\n");
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        Game game=new Game(size);
-        game.startGame();
+        //Game game=new Game(size);
+        //game.startGame();
         //System.out.println(game.seeActives());
 
 
