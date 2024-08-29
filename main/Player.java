@@ -12,6 +12,7 @@ public class Player{
 
     protected int id;
     protected boolean isMember;
+    protected boolean hasBeenMember;
     protected boolean isLeader;
 
     protected CultMember cultMember;
@@ -106,16 +107,14 @@ public class Player{
                     playerChild.board.setBoardElement(this.size.getParentTwoIndex(), new Tuple<>(player2.id, newPositionTwo)); //dodac indeksy
 
                     //updates const of number of active players
-                    game.activesSize++;
-                    game.possibleChildren--;
                     this.ChildrenCounter++;
                     player2.ChildrenCounter++;
-                    game.babiesBorn++;
+                    this.game.babiesBorn++;
 
                     //if one of the parents is in cult, the child is a member from birth
                     if (this.isMember || player2.isMember) {
                         this.cult.addMember(playerChild);
-                        game.childrenInCult++;
+                        this.game.childrenInCult++;
                     }
                 }
             }
@@ -127,8 +126,9 @@ public class Player{
         int possible=this.game.size.getAmountChildren()-this.ChildrenCounter;
         //check how many children possible in universe
         //int available=this.game.size.maxSize-this.game.activesSize;
-        if (this.game.possibleChildren < possible) {
-            possible=this.game.possibleChildren;
+        int n=game.maxsize-game.nPeople();
+        if (n < possible) {
+            possible=n;
         }
         if(possible>3){possible=3;}
         return possible;

@@ -8,21 +8,19 @@ import static main.Messages.FAILEDESCAPE;
 
 public class Game implements Runnable{
     Player[] actives;
-    private final int maxsize; //from input
+    protected final int maxsize; //from input
     final Size size;
-    protected int activesSize;
-    protected int possibleChildren;
+    private final int activesSize;
     protected Leader cultLeader;
     protected Cult cult;
-    public Game(Size size){ //make it get from input
+    public Game(Size size, String godName){ //make it get from input
         this.size=size;
         this.maxsize=size.maxSize;
         this.activesSize=size.actives;
-        this.possibleChildren=size.possibleChildren;
 
         actives= new Player[this.maxsize];
         Arrays.fill(actives, null);
-        this.cult=new Cult();
+        this.cult=new Cult(godName);
         Player pl=new Player(0,this);
         Leader leader=new Leader(pl);
         this.cult.setLeader(leader);
@@ -120,7 +118,7 @@ public class Game implements Runnable{
                 // Making thread sleep for 0.5 seconds
 
                 //OUTPUT
-                System.out.println("\n\n-----------------WHAT HAPPENDED THIS YEAR:------------------");
+                System.out.println("\n\n-------------------WHAT HAPPENED THIS YEAR:--------------------");
                 System.out.println(met+" people have met,");
                 System.out.println(newFriends+" people have become friends,");
                 System.out.println(newLovers+" couples have formed,");
@@ -128,12 +126,13 @@ public class Game implements Runnable{
                 System.out.println(deaths+" people died of natural causes or illness,");
                 System.out.println(suicides+" people committed suicide,");
                 System.out.println(babiesBorn+" children were born,");
-                System.out.println("Number of people in universe: "+activesSize);
+                System.out.println("Number of people in universe: "+nPeople());
 
                 System.out.println("\nnMembers: "+nMembers());
                 System.out.println("isEveryoneMember: "+isEveryoneMember());
                 System.out.println("minFaith: "+minFaith);
                 System.out.println("maxFaith: "+maxFaith);
+                System.out.println("Attempts on leader: "+attemptsOnLeader);
 
                 System.out.println("\nIN THE CULT:");
                 System.out.println(newMembers+" new members were recruited,");
@@ -238,9 +237,6 @@ public class Game implements Runnable{
                                         }
                                     }
                                     newMembers++;
-                                } else {
-                                    if(sender.status==1 && sender.cultMember!=null){sender.cultMember.pray();}
-                                    //to even send the recruit message you have to be a member first, so no need to check
                                 }
                                 break;
                             case FRIEND:
@@ -296,7 +292,7 @@ public class Game implements Runnable{
                                 break;
                             case CHILD:
                                 //no need for double check because we check lover just once in loop (and there is only one lover and always the same)
-                                if(sender.status==1) {
+                                if(actives[idsender].status==1) {
                                     if (p.sigma() > 0) {
                                         p.MakeChildren(sender);
                                     }
@@ -309,7 +305,6 @@ public class Game implements Runnable{
                                         updateLeaderPosition();
                                     }
                                     killed(sender, p);
-                                    murdered++;
                                 }
                                 break;
                             case ARGUE:
@@ -359,7 +354,6 @@ public class Game implements Runnable{
                                 if(sender.status==1) {
                                     if (sender.isMember && p.isMember && p.cultMember.role == CultMember.Role.LEADER) {
                                         sendMessage(p, sender, Messages.KILLED);
-                                        murdered++;
                                         attemptsOnLeader++;
                                     } else {
                                         if (sender.EnemiesCounter < this.size.getAmountEnemies() && !sender.isInEnemies(p.id)) {
@@ -418,13 +412,14 @@ public class Game implements Runnable{
                                 //if the player is a cult member, they could also just pray
                                 break;
                         }
+                        p.getProfile().setProfileElement(i,Messages.NONE);
                     }else{defaultMethod(p);}
                 }else{defaultMethod(p);}
             }
         }
         //for EVENTS
         int faith=p.stats.getFaith();
-        if(faith==10){maxFaith++;}
+        if(faith>=10){maxFaith++;}else if(faith<=0 && p.hasBeenMember){minFaith++;};
     }
 
     //----------------------DEFAULT---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -470,7 +465,6 @@ public class Game implements Runnable{
         }
         if(p.isMember || p.isLeader){
             if(p.MeetsCounter==0){meet(p);}
-            recruit(p);
         }
     }
 
@@ -562,7 +556,7 @@ public class Game implements Runnable{
                 condition=false;
             }
         }
-        if(p.stats.getAge()>19 && receiver!=null){
+        if(p.stats.getAge()>19 && receiver!=null && receiver.status==1){
             sendMessage(p,receiver,Messages.ARGUE);
         }
     }
@@ -629,9 +623,8 @@ public class Game implements Runnable{
 
         clearRelationships(victim);
         actives[victim.id]=null;
+        murdered++;
 
-        activesSize--;
-        possibleChildren++;
     }
 
     public void die(Player p, boolean isSuicide) {
@@ -644,9 +637,6 @@ public class Game implements Runnable{
 
         clearRelationships(p);
         actives[p.id]=null;
-
-        activesSize--;
-        possibleChildren++;
 
         if (isSuicide) {
             suicides++;
@@ -689,13 +679,15 @@ public class Game implements Runnable{
             massSuicide();
         } else if (minFaith>=(int) Math.ceil(cult.cult.size()*0.5)) {
             rebellion();
-        } else if (attemptsOnLeader>=5) {
+        } else if (attemptsOnLeader>=3) {
             conArtist();
         }
     }
     public void massSuicide(){
-        System.out.println(this.cultLeader.name+" "+this.cultLeader.surname+" reached their goal.\nAll their followers gave their lives for them in a mass suicide drinking CocaCola with bleach, the sacred drink.\nThey felt fulfilled for a while, they even wanted to start another cult. \nWhen they were about to skip town the cops arrested them. \nWhat he didn’t know was that there was a survivor, their lover sneaked out during the turmoil and their testimony was useful to catch them. \nNow "+this.cultLeader.name+" spends the rest of their days in prison.");
-        terminateGame();
+        if (cult.cult.size()>19) {
+            System.out.println(this.cultLeader.name + " " + this.cultLeader.surname + " reached their goal.\nAll their followers gave their lives for them in a mass suicide drinking CocaCola with bleach, the sacred drink.\nThey felt fulfilled for a while, they even wanted to start another cult. \nWhen they were about to skip town the cops arrested them. \nWhat he didn’t know was that there was a survivor, their lover sneaked out during the turmoil and their testimony was useful to catch them. \nNow " + this.cultLeader.name + " spends the rest of their days in prison.");
+            terminateGame();
+        }
     }
 
     public void conArtist(){
@@ -709,7 +701,11 @@ public class Game implements Runnable{
     }
 
     public void civilWar(){
-        System.out.println("For a moment "+this.cultLeader.name+" "+this.cultLeader.surname+" had it all, the big following they had always wanted.\nBut as all things nothing last forever.\nAfter their death, since they were childless, the leader position was left empty and up for grabs.\n"+this.cultLeader.name+" would have never imagined that their right-hand man and closest friend would betray his memory.\nTheir \"friend\" tried to take over the cult claiming "+this.cultLeader.name+" had named him heir, but not everyone was happy though. \nSome members said their god "+this.cult.god+" spoke to them saying they were the rightful heirs to the cult. \nMany leaders followed, each one murdered after a short period. \nThe media called it the \"deadly leaderless cult\", more than half of its members died trying to take over the cult and after many deaths the police intervened saving the few survivors");
+        if(cult.cult.size()>19) {
+            System.out.println("For a moment " + this.cultLeader.name + " " + this.cultLeader.surname + " had it all, the big following they had always wanted.\nBut as all things nothing last forever.\nAfter their death, since they were childless, the leader position was left empty and up for grabs.\n" + this.cultLeader.name + " would have never imagined that their right-hand man and closest friend would betray his memory.\nTheir \"friend\" tried to take over the cult claiming " + this.cultLeader.name + " had named him heir, but not everyone was happy though. \nSome members said their god " + this.cult.god + " spoke to them saying they were the rightful heirs to the cult. \nMany leaders followed, each one murdered after a short period. \nThe media called it the \"deadly leaderless cult\", more than half of its members died trying to take over the cult and after many deaths the police intervened saving the few survivors");
+        }else{
+            System.out.println("Unfortunately, our dear leader " + this.cultLeader.name + " " + this.cultLeader.surname + " has left us too soon, without being able to achieve their goal and without an heir to succeed them. \nPerhaps they started their cult too late, or perhaps in the end the supreme "+ cult.god +" did not favor them as much as they believed. \nIn any case, " + this.cultLeader.name + " was unable to recruit enough believers in their cult. \nMay "+cult.god+" bless them.");
+        }
         terminateGame();
     }
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -719,6 +715,25 @@ public class Game implements Runnable{
             if(p!=null && !p.isMember){return false;}
         }
         return true;
+    }
+
+    public int nPeople(){
+        int n=0;
+        for(Player p: actives){
+            if(p!=null && p.status==1){
+                n++;
+            }
+        }
+        return n;
+    }
+    public int nPeopleNotRemoved(){
+        int n=0;
+        for(Player p: actives){
+            if(p!=null && p.status==0){
+                n++;
+            }
+        }
+        return n;
     }
 
     public int nMembers(){

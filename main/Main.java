@@ -56,8 +56,8 @@ public class Main {
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        //Game game=new Game(size);
-        //game.startGame();
+        Game game=new Game(size,god);
+        game.startGame();
         //System.out.println(game.seeActives());
 
 

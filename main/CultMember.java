@@ -64,7 +64,6 @@ public abstract class CultMember extends Player{
                 }
             } else if (f>0){
                 this.stats.setFaith(f - 1);
-                if(this.stats.getFaith()<=0){game.minFaith++;}
             }
         }
     }

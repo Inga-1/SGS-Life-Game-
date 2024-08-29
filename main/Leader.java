@@ -20,10 +20,9 @@ public class Leader extends CultMember{
 
     //kick out members
     public void kickOut(Player member){
-        this.cult.cult.remove(member.cultMember);
+        this.cult.cult.remove(member.cultMember.id);
         member.isMember=false;
         member.cultMember=null;
-        System.out.println(member.id+"has been kicked out from the Cult.");
     }
 
         //happens when  member tries to escape and fails --> hard work

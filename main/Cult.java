@@ -7,8 +7,8 @@ public class Cult {
     protected Leader leader;
     boolean started;//0 not started, 1 started
     String god;
-    public Cult(){
-        this.god="Loki"; //make it get from input
+    public Cult(String godName){
+        this.god=godName; //make it get from input
         this.started=false;
     }
 
@@ -23,6 +23,7 @@ public class Cult {
         if(p.status==1) {
             if(!this.started){this.started=true;}
             p.isMember = true;
+            p.hasBeenMember=true;
             cult.add(p.makeMember());
             if (p.ChildrenCounter > 0) {
                 for (int i = p.size.BeginningChildrenInterval(); i <= p.size.EndChildrenInterval(); i++) {
