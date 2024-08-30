@@ -57,6 +57,7 @@ public class Main {
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         Game game=new Game(size,god);
+        System.out.println("Welcome player! \nThis is the story of "+game.cultLeader.name+" "+game.cultLeader.surname+", a young yoga teacher with a dream: becoming the leader of a cult. \nOur supreme Lord "+game.cult.god+" has chosen them to expand its following and spread its Word. \nLet's see how the story continues...");
         game.startGame();
         //System.out.println(game.seeActives());
 

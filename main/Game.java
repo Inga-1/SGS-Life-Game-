@@ -118,7 +118,7 @@ public class Game implements Runnable{
                 // Making thread sleep for 0.5 seconds
 
                 //OUTPUT
-                System.out.println("\n\n-------------------WHAT HAPPENED THIS YEAR:--------------------");
+                System.out.println("\n\n-------------------------WHAT HAPPENED THIS YEAR:----------------------------------------------------------------------------------------------------------------------------------------------");
                 System.out.println(met+" people have met,");
                 System.out.println(newFriends+" people have become friends,");
                 System.out.println(newLovers+" couples have formed,");
@@ -140,7 +140,8 @@ public class Game implements Runnable{
                 System.out.println(membersEscaped+" members have betrayed us and run away,");
                 System.out.println(membersKickedOut+" members were kicked out.");
                 System.out.println(deadInCult+" members have died.\n");
-                System.out.println("Number of members: "+cult.cult.size()+"\n\n");
+                System.out.println("Number of members: "+cult.cult.size());
+                System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
                 Thread.sleep(500);
                 //pause
@@ -154,6 +155,7 @@ public class Game implements Runnable{
                         o = Integer.parseInt(myObj.nextLine());
                         if (o == 1 || o == 2) {
                             valid = true;
+                            System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                         } else {
                             System.out.println("Invalid choice! Please press 1 to continue or 2 to quit.");
                         }
@@ -177,7 +179,8 @@ public class Game implements Runnable{
         }
         // Catch block to handle exception
         catch (InterruptedException e) {
-            System.out.println("The End.");
+            System.out.println("The adventure with this cult has ended.\nWas this cult how you expected? \nIf you're not entirely satisfied, don't worry, you can start over and see how this life turns up. \nHope you had fun!");
+            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         }
     }
     //create methods to update each configuration (feedback function)
@@ -300,88 +303,84 @@ public class Game implements Runnable{
                                 }
                                 break;
                             case KILLED:
-                                if(sender.status==1) {
-                                    if (p.isLeader) {
-                                        updateLeaderPosition();
-                                    }
-                                    killed(sender, p);
+                                if (p.isLeader) {
+                                    updateLeaderPosition();
                                 }
+                                killed(sender, p);
+
                                 break;
                             case ARGUE:
                                 //if someone argues with leader they get kicked out
-                                if(sender.status==1) {
-                                    if (sender.isMember && p.isMember && p.cultMember.role == CultMember.Role.LEADER) {
-                                        this.cultLeader.kickOut(sender);
-                                        membersKickedOut++;
-                                    }
+                                if (sender.isMember && p.isMember && p.cultMember.role == CultMember.Role.LEADER) {
+                                    this.cultLeader.kickOut(sender);
+                                    membersKickedOut++;
+                                }
 
-                                    Random randArgue = new Random();
-                                    int senderThrow = randArgue.nextInt(25);
-                                    int pThrow = randArgue.nextInt(25);
-                                    senderThrow += sender.stats.getCharisma() + sender.stats.getWillpower();
-                                    pThrow += p.stats.getCharisma() + p.stats.getWillpower();
+                                Random randArgue = new Random();
+                                int senderThrow = randArgue.nextInt(25);
+                                int pThrow = randArgue.nextInt(25);
+                                senderThrow += sender.stats.getCharisma() + sender.stats.getWillpower();
+                                pThrow += p.stats.getCharisma() + p.stats.getWillpower();
 
                                     //who "loses" puts the other in enemies, if its already enemy tries to kill
-                                    if (senderThrow > pThrow) {
-                                        if (p.EnemiesCounter < this.size.getAmountEnemies() && !p.isInEnemies(sender.id)) {
-                                            int newEnemyPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
-                                            if (newEnemyPosition >= 0) {
-                                                p.board.setBoardElement(newEnemyPosition, tup);
-                                                sendMessage(p, sender, Messages.NONE);
-                                            }
-                                        } else if (p.isInEnemies(sender.id)) {
-                                            p.kill(sender);
-                                        } else {
+                                if (senderThrow > pThrow) {
+                                    if (p.EnemiesCounter < this.size.getAmountEnemies() && !p.isInEnemies(sender.id)) {
+                                        int newEnemyPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
+                                        if (newEnemyPosition >= 0) {
+                                            p.board.setBoardElement(newEnemyPosition, tup);
                                             sendMessage(p, sender, Messages.NONE);
                                         }
+                                    } else if (p.isInEnemies(sender.id)) {
+                                        p.kill(sender);
                                     } else {
-                                        if (sender.EnemiesCounter < this.size.getAmountEnemies() && !sender.isInEnemies(p.id)) {
-                                            int newEnemyPosition = sender.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
-                                            if (newEnemyPosition >= 0) {
-                                                sender.board.setBoardElement(newEnemyPosition, p.board.getBoardElement(yourIndex));
-                                                sendMessage(p, sender, Messages.NONE);
-                                            }
-                                        } else if (sender.isInEnemies(p.id)) {
-                                            sender.kill(p);
-                                        } else {
-                                            sendMessage(sender, p, Messages.NONE);
+                                        sendMessage(p, sender, Messages.NONE);
+                                    }
+                                } else {
+                                    if (sender.EnemiesCounter < this.size.getAmountEnemies() && !sender.isInEnemies(p.id)) {
+                                        int newEnemyPosition = sender.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
+                                        if (newEnemyPosition >= 0) {
+                                            sender.board.setBoardElement(newEnemyPosition, p.board.getBoardElement(yourIndex));
+                                            sendMessage(p, sender, Messages.NONE);
                                         }
+                                    } else if (sender.isInEnemies(p.id)) {
+                                        sender.kill(p);
+                                    } else {
+                                        sendMessage(sender, p, Messages.NONE);
                                     }
                                 }
 
                                 break;
                             case FAILEDKILL:
-                                if(sender.status==1) {
-                                    if (sender.isMember && p.isMember && p.cultMember.role == CultMember.Role.LEADER) {
-                                        sendMessage(p, sender, Messages.KILLED);
-                                        attemptsOnLeader++;
-                                    } else {
-                                        if (sender.EnemiesCounter < this.size.getAmountEnemies() && !sender.isInEnemies(p.id)) {
+                                if (sender.isMember && p.isMember && p.cultMember.role == CultMember.Role.LEADER) {
+                                    sendMessage(p, sender, Messages.KILLED);
+                                    attemptsOnLeader++;
+                                } else {
+                                    if (p.EnemiesCounter < this.size.getAmountEnemies() && !p.isInEnemies(sender.id)) {
                                             //if someone tries to kill you,it becomes your enemy
-                                            int newEnemyPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
-                                            if (newEnemyPosition >= 0) {
-                                                p.board.setBoardElement(newEnemyPosition, tup);
-                                            }
-                                        } else if (sender.isInEnemies(p.id)) {
-                                            sender.kill(p);
-                                        } else {
-                                            sendMessage(sender, p, Messages.NONE);
+                                        int newEnemyPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
+                                        if (newEnemyPosition >= 0) {
+                                            p.board.setBoardElement(newEnemyPosition, tup);
                                         }
+                                    } else if (sender.isInEnemies(p.id)) {
+                                        p.kill(sender);
+                                    } else {
+                                        sendMessage(p, sender, Messages.NONE);
                                     }
                                 }
+
                                 break;
                             case FAILEDESCAPE:
-                                if (sender.status==1 && sender.isMember && p.isMember && p.cultMember.role == CultMember.Role.LEADER) {
-                                    if (sender.EnemiesCounter < this.size.getAmountEnemies() && !sender.isInEnemies(p.id)) {
+                                if (sender.isMember && p.isMember && p.cultMember.role == CultMember.Role.LEADER) {
+                                    if (p.EnemiesCounter < this.size.getAmountEnemies() && !p.isInEnemies(sender.id)) {
                                         //idk, maybe put in enemies of leader
                                         int newDefectorPosition = p.findEmptySpotInBoard(this.size.BeginningEnemiesInterval(), this.size.EndEnemiesInterval());
                                         if (newDefectorPosition >= 0) {
                                             p.board.setBoardElement(newDefectorPosition, tup);
                                         }
                                     }else if (sender.isInEnemies(p.id)) {
-                                        sender.kill(p);
+                                        p.kill(sender);
                                     } else {
-                                        sendMessage(sender, p, Messages.NONE);
+                                        sendMessage(p, sender, Messages.NONE);
                                     }
                                 }
                                 break;
@@ -666,8 +665,12 @@ public class Game implements Runnable{
         Tuple<Integer, Integer> heirTup=this.cultLeader.board.board[this.size.BeginningChildrenInterval()];
         if(heirTup!=null && heirTup.getFirst()!=null && heirTup.getSecond()!=null) {
             Player heir = actives[heirTup.getFirst()];
-            heir.makeLeader();
-            System.out.println("We have a new leader!");
+            Leader heirl=heir.makeLeader();
+            System.out.println("\n\n-------------------------------------!EVENT!---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("Things are getting interesting here.\nEven though "+this.cultLeader.name + " " + this.cultLeader.surname + " died, their legacy hasn't ended yet.\nTheir firstborn child, "+heir.name+" "+heir.surname+", is set to replace them.\nDo you think his child will do better?");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            this.cultLeader=heirl;
+            this.cult.setLeader(heirl);
         }else{
             civilWar(); //CIVIL WAR EVENT
         }
@@ -675,9 +678,9 @@ public class Game implements Runnable{
 
     //------------------------------------EVENTS-----------------------------------------------------------------------------------------------------------------------------
     public void checkEvents(){
-        if(maxFaith>=(int) Math.ceil(cult.cult.size()*0.5)){
+        if(maxFaith>=(int) Math.ceil(cult.cult.size()*0.5)&& maxFaith>minFaith){
             massSuicide();
-        } else if (minFaith>=(int) Math.ceil(cult.cult.size()*0.5)) {
+        } else if (minFaith>=(int) Math.ceil(cult.cult.size()*0.5)&& minFaith>=maxFaith) {
             rebellion();
         } else if (attemptsOnLeader>=3) {
             conArtist();
@@ -685,26 +688,38 @@ public class Game implements Runnable{
     }
     public void massSuicide(){
         if (cult.cult.size()>19) {
-            System.out.println(this.cultLeader.name + " " + this.cultLeader.surname + " reached their goal.\nAll their followers gave their lives for them in a mass suicide drinking CocaCola with bleach, the sacred drink.\nThey felt fulfilled for a while, they even wanted to start another cult. \nWhen they were about to skip town the cops arrested them. \nWhat he didn’t know was that there was a survivor, their lover sneaked out during the turmoil and their testimony was useful to catch them. \nNow " + this.cultLeader.name + " spends the rest of their days in prison.");
+            System.out.println("\n\n-------------------------------------!EVENT!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println(this.cultLeader.name + " " + this.cultLeader.surname + " reached their goal.\nAll their followers gave their lives for them in a mass suicide drinking CocaCola with bleach, the sacred drink.\nThey felt fulfilled for a while, they even wanted to start another cult. \nWhen they were about to skip town the cops arrested them. \nWhat they didn’t know was that there was a survivor, their lover sneaked out during the turmoil and their testimony was useful to catch them. \nNow " + this.cultLeader.name + " spends the rest of their days in prison.");
+            System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             terminateGame();
         }
     }
 
     public void conArtist(){
-        System.out.println("After 5 murder attempts, "+this.cultLeader.name+" "+this.cultLeader.surname+" realizes their charisma won’t work this time. \nThem and their lover sneaked out during the night. \nSome members waited months thinking they left for a prophecy, however it was later revealed that the leader was a con artist that started the cult in order to become a millionaire. \nSome say they bought a house somewhere in the Caribbean where they live with their lover and beloved dog Loki; others say they started another cult in Polynesia.  \nAlmost everyone went back to their lives, even though they still hope that the prophecy will be fulfilled.");
+        System.out.println("\n\n-------------------------------------!EVENT!---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("After three murder attempts, "+this.cultLeader.name+" "+this.cultLeader.surname+" realizes their charisma won’t work this time. \nThem and their lover sneaked out during the night. \nSome members waited months thinking they left for a prophecy, however it was later revealed that the leader was a con artist that started the cult in order to become a millionaire. \nSome say they bought a house somewhere in the Caribbean where they live with their lover and beloved dog Loki; others say they started another cult in Polynesia.  \nAlmost everyone went back to their lives, even though they still hope that the prophecy will be fulfilled.");
+        System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         terminateGame();
     }
 
     public void rebellion(){
-        System.out.println("There was always some tension in the cult, most members weren’t 100% convinced by "+this.cultLeader.name+" "+this.cultLeader.surname+", but still they stuck around to see where this was going. \n"+this.cultLeader.name+" thought his charisma would be enough to pull it off, however he didn’t expect that his members would start questioning them and turn against them. \nAnd as quickly as it started it quickly vanished.");
-        terminateGame();
+        if (cult.cult.size()>19) {
+            System.out.println("\n\n-------------------------------------!EVENT!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("There was always some tension in the cult, most members weren’t 100% convinced by " + this.cultLeader.name + " " + this.cultLeader.surname + ", but still they stuck around to see where this was going. \n" + this.cultLeader.name + " thought his charisma would be enough to pull it off, however he didn’t expect that his members would start questioning them and turn against them. \nAnd as quickly as it started it quickly vanished.");
+            System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            terminateGame();
+        }
     }
 
     public void civilWar(){
         if(cult.cult.size()>19) {
+            System.out.println("\n\n-------------------------------------!EVENT!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             System.out.println("For a moment " + this.cultLeader.name + " " + this.cultLeader.surname + " had it all, the big following they had always wanted.\nBut as all things nothing last forever.\nAfter their death, since they were childless, the leader position was left empty and up for grabs.\n" + this.cultLeader.name + " would have never imagined that their right-hand man and closest friend would betray his memory.\nTheir \"friend\" tried to take over the cult claiming " + this.cultLeader.name + " had named him heir, but not everyone was happy though. \nSome members said their god " + this.cult.god + " spoke to them saying they were the rightful heirs to the cult. \nMany leaders followed, each one murdered after a short period. \nThe media called it the \"deadly leaderless cult\", more than half of its members died trying to take over the cult and after many deaths the police intervened saving the few survivors");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         }else{
+            System.out.println("\n\n-------------------------------------!EVENT!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             System.out.println("Unfortunately, our dear leader " + this.cultLeader.name + " " + this.cultLeader.surname + " has left us too soon, without being able to achieve their goal and without an heir to succeed them. \nPerhaps they started their cult too late, or perhaps in the end the supreme "+ cult.god +" did not favor them as much as they believed. \nIn any case, " + this.cultLeader.name + " was unable to recruit enough believers in their cult. \nMay "+cult.god+" bless them.");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         }
         terminateGame();
     }

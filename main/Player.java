@@ -141,12 +141,11 @@ public class Player{
     }
 
     //for naming an heir
-    public void makeLeader(){
+    public Leader makeLeader(){
         Leader c = new Leader(this);
         this.cultMember=c;
         c.stats.setAge(this.stats.getAge());
-        this.game.cultLeader=c;
-        this.game.cult.setLeader(c);
+        return c;
     }
 
     public boolean isInBoard(int idPerson){
