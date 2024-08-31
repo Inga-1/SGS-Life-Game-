@@ -1,10 +1,11 @@
 package main;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
-        //--------------------- FOR SIZE -------------------------------------------------------------------------------------------------------------------------------------
+       //--------------------- FOR SIZE -------------------------------------------------------------------------------------------------------------------------------------
         Scanner myObj = new Scanner(System.in);
         int sizeNum = 0;
         Size size;
@@ -49,17 +50,12 @@ public class Main {
             }
         }
 
-
-
-        System.out.println("Chosen size: "+size.name+" ");
-        System.out.println("Name of our god: "+god+"\n\n");
-
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        //Game game=new Game(size,god);
         Game game=new Game(size,god);
-        System.out.println("Welcome player! \nThis is the story of "+game.cultLeader.name+" "+game.cultLeader.surname+", a young yoga teacher with a dream: becoming the leader of a cult. \nOur supreme Lord "+game.cult.god+" has chosen them to expand its following and spread its Word. \nLet's see how the story continues...");
+        System.out.println("\n\nWelcome player! \nThis is the story of "+game.cultLeader.name+" "+game.cultLeader.surname+", a young yoga teacher with a dream: becoming the leader of a cult. \nOur supreme Lord "+game.cult.god+" has chosen them to expand its following and spread its Word. \nLet's see how the story continues...");
         game.startGame();
-        //System.out.println(game.seeActives());
 
 
 

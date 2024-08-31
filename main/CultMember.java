@@ -63,7 +63,9 @@ public abstract class CultMember extends Player{
                     }
                 }
             } else if (f>0){
-                this.stats.setFaith(f - 1);
+                Random r= new Random();
+                int n=r.nextInt(2);
+                this.stats.setFaith(f - 1 -n);
             }
         }
     }
