@@ -703,12 +703,13 @@ public class Game implements Runnable{
 
     //------------------------------------EVENTS-----------------------------------------------------------------------------------------------------------------------------
     public void checkEvents(){
-        if(maxFaith>=(int) Math.ceil(cult.cult.size()*0.5)&& maxFaith>minFaith){
+        if (attemptsOnLeader>=3) {
+            conArtist();
+        }
+        else if(maxFaith>=(int) Math.ceil(cult.cult.size()*0.5)&& maxFaith>minFaith){
             massSuicide();
         } else if (minFaith>=(int) Math.ceil(cult.cult.size()*0.5)&& minFaith>=maxFaith) {
             rebellion();
-        } else if (attemptsOnLeader>=3) {
-            conArtist();
         }
     }
 
